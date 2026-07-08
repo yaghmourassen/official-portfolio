@@ -1,0 +1,49 @@
+/* ==========================
+   NAVBAR
+========================== */
+
+.custom-navbar{
+
+    background:#0f172a;
+
+    padding:15px 0;
+
+    transition:.3s;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.2);
+
+}
+
+.navbar-brand{
+
+    color:#38bdf8 !important;
+
+    font-size:28px;
+
+    letter-spacing:2px;
+
+}
+
+.nav-link{
+
+    color:white !important;
+
+    margin-left:15px;
+
+    font-weight:500;
+
+    transition:.3s;
+
+}
+
+.nav-link:hover{
+
+    color:#38bdf8 !important;
+
+}
+
+.nav-link.active{
+
+    color:#38bdf8 !important;
+
+}

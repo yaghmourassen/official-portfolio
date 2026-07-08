@@ -1,0 +1,177 @@
+/* ===============================
+   HERO SECTION
+================================ */
+
+.hero{
+
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+    );
+
+    color:white;
+}
+
+/* ===============================
+   Badge
+================================ */
+
+.hero-badge{
+
+    display:inline-block;
+
+    padding:10px 20px;
+
+    border-radius:50px;
+
+    background:#1e40af;
+
+    margin-bottom:20px;
+
+    font-weight:600;
+}
+
+/* ===============================
+   Title
+================================ */
+
+.hero-title{
+
+    font-size:65px;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+}
+
+.hero-title span{
+
+    color:#38bdf8;
+}
+
+/* ===============================
+   Subtitle
+================================ */
+
+.hero-subtitle{
+
+    font-size:30px;
+
+    color:#cbd5e1;
+
+    margin-bottom:25px;
+}
+
+/* ===============================
+   Description
+================================ */
+
+.hero-text{
+
+    font-size:18px;
+
+    color:#94a3b8;
+
+    line-height:1.8;
+
+    margin-bottom:35px;
+}
+
+/* ===============================
+   Buttons
+================================ */
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+.hero-buttons .btn{
+
+    padding:15px 30px;
+
+    border-radius:10px;
+
+    transition:.3s;
+}
+
+.hero-buttons .btn:hover{
+
+    transform:translateY(-5px);
+}
+
+/* ===============================
+   Image
+================================ */
+
+.hero-image{
+
+    width:430px;
+
+    max-width:100%;
+
+    animation:float 5s ease-in-out infinite;
+}
+
+/* ===============================
+   Animation
+================================ */
+
+@keyframes float{
+
+    0%{
+
+        transform:translateY(0);
+    }
+
+    50%{
+
+        transform:translateY(-20px);
+    }
+
+    100%{
+
+        transform:translateY(0);
+    }
+
+}
+
+/* ===============================
+   Responsive
+================================ */
+
+@media(max-width:992px){
+
+    .hero{
+
+        text-align:center;
+    }
+
+    .hero-title{
+
+        font-size:45px;
+    }
+
+    .hero-subtitle{
+
+        font-size:24px;
+    }
+
+    .hero-buttons{
+
+        justify-content:center;
+    }
+
+    .hero-image{
+
+        width:280px;
+
+        margin-top:40px;
+    }
+
+}

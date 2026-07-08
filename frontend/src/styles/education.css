@@ -1,0 +1,88 @@
+.education{
+    padding:100px 8%;
+    background:#f8fafc;
+}
+
+.education-container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.education-grid{
+    margin-top:60px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:30px;
+}
+
+.education-card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.06);
+
+    transition:.3s;
+
+}
+
+.education-card:hover{
+
+    transform:translateY(-10px);
+
+}
+
+.education-year{
+
+    display:inline-block;
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    margin-bottom:20px;
+
+    font-size:14px;
+
+}
+
+.education-card h3{
+
+    color:#111827;
+
+    margin-bottom:10px;
+
+}
+
+.education-card h4{
+
+    color:#2563eb;
+
+    margin-bottom:15px;
+
+}
+
+.education-card p{
+
+    color:#666;
+
+    line-height:1.7;
+
+}
+
+@media(max-width:768px){
+
+.education{
+
+padding:70px 20px;
+
+}
+
+}
