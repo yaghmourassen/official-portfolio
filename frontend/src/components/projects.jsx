@@ -1,148 +1,77 @@
-import "../styles/projects.css";
-
-// import ecommerce from "../assets/images/ecommerce.jpg";
-// import network from "../assets/images/network.jpg";
-// import cybersecurity from "../assets/images/cybersecurity.jpg";
-
-import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import React, { useState, useEffect } from 'react';
+// استيراد دالة جلب المشاريع من الخدمة
+import { getProjects } from '../services/projects';
 
 function Projects() {
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const projects = [
+    // جلب البيانات من الباكند فور تحميل المكون
+    useEffect(() => {
+        const fetchDynamicProjects = async () => {
+            try {
+                const data = await getProjects();
+                // التأكد من هيكلة البيانات القادمة وحفظها في الـ State
+                if (Array.isArray(data)) {
+                    setProjects(data);
+                } else if (data && data.data) {
+                    setProjects(data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching projects for Home page:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        {
-            title: "E-Commerce Platform",
-
-            // image: ecommerce,
-
-            description:
-                "Full Stack E-Commerce application built with Spring Boot and React featuring authentication, payments and real-time chat.",
-
-            technologies: [
-                "React",
-                "Spring Boot",
-                "MongoDB",
-                "Docker"
-            ],
-
-            github: "#",
-            demo: "#"
-        },
-
-        {
-            title: "Enterprise Network",
-
-            // image: network,
-
-            description:
-                "Enterprise network design with VLANs, routing, firewalls and cybersecurity best practices.",
-
-            technologies: [
-                "Cisco",
-                "Networking",
-                "Security"
-            ],
-
-            github: "#",
-            demo: "#"
-        },
-
-        {
-            title: "Predictive Maintenance",
-
-            // image: cybersecurity,
-
-            description:
-                "IoT and AI project for predictive maintenance and cybersecurity monitoring.",
-
-            technologies: [
-                "Python",
-                "IoT",
-                "Machine Learning"
-            ],
-
-            github: "#",
-            demo: "#"
-        }
-
-    ];
+        fetchDynamicProjects();
+    }, []);
 
     return (
-
-        <section id="projects" className="projects">
-
-            <div className="projects-container">
-
-                <span className="section-subtitle">
-                    Portfolio
-                </span>
-
-                <h2 className="section-title">
-                    My Recent Projects
-                </h2>
-
+        <section id="projects" className="projects-section">
+            <h2 className="section-title">My Projects</h2>
+            
+            {loading ? (
+                <p className="loading-text">Loading projects from database...</p>
+            ) : projects.length === 0 ? (
+                <p className="no-projects">No projects found. Add some from the admin dashboard!</p>
+            ) : (
+                /* كروت المشاريع */
                 <div className="projects-grid">
-
-                    {projects.map((project, index) => (
-
-                        <div className="project-card" key={index}>
-
-                            {/* سيتم تفعيل الصورة لاحقًا */}
-                            {/*
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                            />
-                            */}
-
+                    {projects.map((project) => (
+                        <div key={project.id} className="project-card">
                             <div className="project-content">
-
-                                <h3>{project.title}</h3>
-
-                                <p>{project.description}</p>
-
-                                <div className="tech-list">
-
-                                    {project.technologies.map((tech, i) => (
-                                        <span key={i}>{tech}</span>
-                                    ))}
-
+                                <h3 className="project-title">{project.title}</h3>
+                                <p className="project-description">{project.description}</p>
+                                
+                                <div className="project-links">
+                                    {project.githubLink && (
+                                        <a 
+                                            href={project.githubLink} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="project-link github-link"
+                                        >
+                                            📦 GitHub
+                                        </a>
+                                    )}
+                                    {project.liveLink && (
+                                        <a 
+                                            href={project.liveLink} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="project-link live-link"
+                                        >
+                                            🌐 Live Demo
+                                        </a>
+                                    )}
                                 </div>
-
-                                <div className="project-buttons">
-
-                                    <a
-                                        href={project.github}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <FaGithub />
-                                        GitHub
-                                    </a>
-
-                                    <a
-                                        href={project.demo}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <FaExternalLinkAlt />
-                                        Live Demo
-                                    </a>
-
-                                </div>
-
                             </div>
-
                         </div>
-
                     ))}
-
                 </div>
-
-            </div>
-
+            )}
         </section>
-
     );
 }
 

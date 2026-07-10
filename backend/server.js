@@ -4,7 +4,8 @@ const cors = require("cors");
 const { sequelize, connectDatabase } = require("./src/config/database");
 
 const projectRoutes = require("./src/routes/projectr");
-const userRoutes = require("./src/routes/userr");
+// 1. استدعاء ملف مسار تسجيل الدخول الجديد (Auth Route)
+const authRoutes = require("./src/routes/authr"); 
 
 const app = express();
 
@@ -38,8 +39,11 @@ app.get("/", (req, res) => {
 // API Routes
 // ==============================
 
+// 2. تفعيل مسار تسجيل الدخول تحت بادئة /api/auth
+app.use("/api/auth", authRoutes); 
+
 app.use("/api/projects", projectRoutes);
-app.use("/api/users", userRoutes);
+
 
 // ==============================
 // Start Server
