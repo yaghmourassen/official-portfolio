@@ -13,15 +13,20 @@ export const getAllProjectsRequest = async () => {
     }
 };
 
-// 2. إرسال مشروع جديد
+// 2. إرسال مشروع جديد (تعديل ليدعم الصور والـ FormData)
 export const createProjectRequest = async (projectData) => {
     try {
+        // نتحقق إذا كانت البيانات القادمة هي FormData (لرفع الصور) أو كائن عادي
+        const isFormData = projectData instanceof FormData;
+
         const response = await fetch(PROJECTS_API, {
             method: "POST",
-            headers: {
+            // إذا كانت FormData نترك المتصفح يضع الـ headers تلقائياً، وإلا نضع الـ JSON
+            headers: isFormData ? {} : {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(projectData),
+            // لا نستخدم JSON.stringify إذا كانت البيانات FormData
+            body: isFormData ? projectData : JSON.stringify(projectData),
         });
         return await response.json();
     } catch (error) {
@@ -30,15 +35,17 @@ export const createProjectRequest = async (projectData) => {
     }
 };
 
-// 3. تحديث مشروع موجود (الدالة التي كانت تنقصك)
+// 3. تحديث مشروع موجود
 export const updateProjectRequest = async (id, projectData) => {
     try {
+        const isFormData = projectData instanceof FormData;
+
         const response = await fetch(`${PROJECTS_API}/${id}`, {
             method: "PUT",
-            headers: {
+            headers: isFormData ? {} : {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(projectData),
+            body: isFormData ? projectData : JSON.stringify(projectData),
         });
         return await response.json();
     } catch (error) {
@@ -60,9 +67,9 @@ export const deleteProjectRequest = async (id) => {
     }
 };
 
-// ---  الأسماء المستعارة لحل مشكلة التطابق مع Projects.jsx نهائياً ---
+// ---  الأسماء المستعارة لحل مشكلة التطابق نهائياً ---
 export const getAllProjects = getAllProjectsRequest;
 export const getProjects = getAllProjectsRequest;
 export const createProject = createProjectRequest;
-export const updateProject = updateProjectRequest; // تم حل مشكلة السطر 13 هنا
+export const updateProject = updateProjectRequest; 
 export const deleteProject = deleteProjectRequest;

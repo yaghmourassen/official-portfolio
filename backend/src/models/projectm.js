@@ -1,3 +1,4 @@
+// src/models/projectm.js
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
@@ -18,13 +19,31 @@ const Project = sequelize.define(
             },
         },
 
+        subtitle: {
+            type: DataTypes.STRING(255),
+            allowNull: true,
+        },
+
         description: {
             type: DataTypes.TEXT,
             allowNull: false,
         },
 
-        image: {
+        // Renommé pour être raccord avec notre contrôleur (image_url)
+        image_url: {
             type: DataTypes.STRING,
+            allowNull: true,
+        },
+
+        category: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+            defaultValue: "Full-Stack",
+        },
+
+        // Stockage du tableau des technos au format JSON (converti automatiquement par Sequelize en chaîne sous SQLite)
+        technologies: {
+            type: DataTypes.JSON, 
             allowNull: true,
         },
 
@@ -32,15 +51,17 @@ const Project = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isUrl: true,
+                // On retire ou assouplit isUrl si tu veux accepter des champs vides sans bugger
+                isUrl: { msg: "Le lien GitHub doit être une URL valide." },
             },
         },
 
-        demo_url: {
+        // Remplacé demo_url par live_url pour matcher le frontend qu'on a prévu
+        live_url: {
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isUrl: true,
+                isUrl: { msg: "Le lien Live doit être une URL valide." },
             },
         },
     },

@@ -1,153 +1,276 @@
-.projects{
-
-    padding:100px 8%;
-
-    background:#f8fafc;
-
+/* الحاوية الأساسية للقسم */
+.projects {
+    padding: 100px 8%;
+    background: #f8fafc;
+    font-family: system-ui, -apple-system, sans-serif;
 }
 
-.projects-container{
-
-    max-width:1200px;
-
-    margin:auto;
-
+.projects-container {
+    max-width: 1200px;
+    margin: auto;
 }
 
-.projects-grid{
-
-    margin-top:60px;
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-
-    gap:30px;
-
+/* تنسيق الهيدر وأزرار الفلترة */
+.projects-header {
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-.project-card{
-
-    background:#fff;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-
-    transition:.35s;
-
+.section-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 10px;
 }
 
-.project-card:hover{
-
-    transform:translateY(-12px);
-
+.section-subtitle {
+    color: #64748b;
+    font-size: 16px;
+    margin-bottom: 25px;
 }
 
-.project-card img{
-
-    width:100%;
-
-    height:220px;
-
-    object-fit:cover;
-
+.filter-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.project-content{
-
-    padding:25px;
-
+/* أزرار الفلترة الدائرية الـ Pills */
+.filter-pill {
+    padding: 8px 22px;
+    border-radius: 30px;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    color: #475569;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.project-content h3{
-
-    color:#111827;
-
-    margin-bottom:15px;
-
+.filter-pill:hover {
+    border-color: #2563eb;
+    color: #2563eb;
 }
 
-.project-content p{
-
-    color:#666;
-
-    line-height:1.7;
-
+.filter-pill.active {
+    border-color: #2563eb;
+    background-color: #2563eb;
+    color: #fff;
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
 }
 
-.tech-list{
-
-    margin:25px 0;
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:10px;
-
+/* شبكة كروت المشاريع (توزيع مرن واحترافي) */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
 }
 
-.tech-list span{
-
-    background:#2563eb;
-
-    color:white;
-
-    padding:7px 14px;
-
-    border-radius:30px;
-
-    font-size:14px;
-
+/* تصميم الكارت والتأثير الحركي الهادئ */
+.project-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
 }
 
-.project-buttons{
-
-    display:flex;
-
-    justify-content:space-between;
-
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
 }
 
-.project-buttons a{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    text-decoration:none;
-
-    color:white;
-
-    background:#111827;
-
-    padding:12px 20px;
-
-    border-radius:8px;
-
-    transition:.3s;
-
+/* إدارة غلاف الصورة والـ placeholder */
+.project-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background-color: #f1f5f9;
 }
 
-.project-buttons a:hover{
-
-    background:#2563eb;
-
+.project-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
-@media(max-width:768px){
-
-.project-buttons{
-
-flex-direction:column;
-
-gap:15px;
-
+.project-card:hover .project-img {
+    transform: scale(1.04); /* تكبير طفيف وتأثير رائع للصورة عند تمرير الماوس */
 }
 
+.project-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #111827 0%, #2563eb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* شارة تصنيف المشروع الفئة */
+.project-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background-color: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* تفاصيل المحتوى والخطوط */
+.project-content {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 6px 0;
+}
+
+.project-card-subtitle {
+    font-size: 12px;
+    color: #2563eb;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 12px 0;
+}
+
+.project-card-description {
+    color: #475569;
+    line-height: 1.6;
+    font-size: 14px;
+    margin: 0 0 20px 0;
+    flex-grow: 1;
+}
+
+/* قائمة الـ Badges الخاصة بالـ Technologies */
+.tech-list {
+    margin: 0 0 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tech-list span {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* أزرار الروابط السفلية */
+.project-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
+    margin-top: auto;
+}
+
+.project-buttons a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-github {
+    color: #334155;
+    background-color: transparent;
+    padding: 8px 0 !important; /* مظهر خطي أنيق بدون خلفية */
+}
+
+.btn-github:hover {
+    color: #2563eb;
+}
+
+.btn-live {
+    color: #fff;
+    background: #111827;
+}
+
+.btn-live:hover {
+    background: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* قسم الـ Loading والدوار */
+.projects-loading {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+.spinner {
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #2563eb;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 15px auto;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* التوافق الكامل مع الهواتف الذكية (Responsive) */
+@media(max-width: 768px) {
+    .projects {
+        padding: 60px 5%;
+    }
+    
+    .section-title {
+        font-size: 28px;
+    }
+    
+    .project-buttons {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .btn-live {
+        justify-content: center;
+    }
+    
+    .btn-github {
+        justify-content: center;
+        background-color: #f1f5f9;
+        padding: 10px 18px !important;
+    }
 }
