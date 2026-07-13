@@ -1,119 +1,97 @@
-.experience{
+/* frontend/src/styles/experience.css */
 
-    padding:100px 8%;
-
-    background:#ffffff;
-
+.experience {
+    padding: 100px 8%;
+    background: #ffffff;
 }
 
-.experience-container{
-
-    max-width:1000px;
-
-    margin:auto;
-
+.experience-container {
+    max-width: 1000px;
+    margin: auto;
 }
 
-.timeline{
-
-    position:relative;
-
-    margin-top:60px;
-
-    padding-left:35px;
-
-    border-left:3px solid #2563eb;
-
+.timeline {
+    position: relative;
+    margin-top: 60px;
+    padding-left: 35px;
+    border-left: 3px solid #2563eb;
 }
 
-.timeline-item{
-
-    position:relative;
-
-    margin-bottom:50px;
-
+.timeline-item {
+    position: relative;
+    margin-bottom: 50px;
 }
 
-.timeline-dot{
-
-    position:absolute;
-
-    left:-46px;
-
-    top:8px;
-
-    width:18px;
-
-    height:18px;
-
-    background:#2563eb;
-
-    border-radius:50%;
-
+/* حركة ذكية: إخفاء الهامش السفلي للخبرة الأخيرة */
+.timeline-item:last-child {
+    margin-bottom: 0;
 }
 
-.timeline-content{
-
-    background:#f8fafc;
-
-    padding:25px;
-
-    border-radius:15px;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
-
+.timeline-dot {
+    position: absolute;
+    left: -46px;
+    top: 8px;
+    width: 18px;
+    height: 18px;
+    background: #2563eb;
+    border-radius: 50%;
 }
 
-.timeline-date{
-
-    color:#2563eb;
-
-    font-weight:600;
-
+.timeline-content {
+    background: #f8fafc;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .06);
+    /* إضافة تأثير حركة ناعم عند ظهور الكروت */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.timeline-content h3{
-
-    margin:10px 0;
-
-    color:#111827;
-
+/* تأثير تحويم ناعم لزيادة التفاعل */
+.timeline-content:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(37, 99, 235, 0.08);
 }
 
-.timeline-content h4{
-
-    color:#666;
-
-    margin-bottom:15px;
-
+.timeline-date {
+    color: #2563eb;
+    font-weight: 600;
 }
 
-.timeline-content p{
-
-    color:#555;
-
-    line-height:1.8;
-
+.timeline-content h3 {
+    margin: 10px 0;
+    color: #111827;
 }
 
-@media(max-width:768px){
-
-.timeline{
-
-padding-left:20px;
-
+.timeline-content h4 {
+    color: #666;
+    margin-bottom: 15px;
 }
 
-.timeline-dot{
-
-left:-31px;
-
+.timeline-content p {
+    color: #555;
+    line-height: 1.8;
 }
 
-.experience{
-
-padding:70px 20px;
-
+/* تنسيق إضافي لنص التحميل أو رسالة مصفوفة فارغة ليظهر بشكل لائق */
+.loading-text, .no-data-text {
+    text-align: center;
+    padding: 40px;
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
+/* التجاوب مع الشاشات الصغيرة (Responsive) */
+@media(max-width: 768px) {
+    .timeline {
+        padding-left: 20px;
+    }
+
+    .timeline-dot {
+        left: -31px;
+    }
+
+    .experience {
+        padding: 70px 20px;
+    }
 }

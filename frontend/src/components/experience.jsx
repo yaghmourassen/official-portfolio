@@ -1,42 +1,36 @@
+// frontend/src/components/experience.jsx
+import React, { useState, useEffect } from 'react';
 import "../styles/experience.css";
+// استيراد دالة الجلب من السيرفيس الصحيح
+import { getAllExperiences } from '../services/experience'; 
 
 function Experience() {
+    const [experiences, setExperiences] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const experiences = [
-        {
-            period: "2025",
-            title: "Software Engineer",
-            company: "Freelance",
-            description:
-                "Developed modern web applications using React, Spring Boot, Express.js and Laravel. Built REST APIs and responsive user interfaces."
-        },
+    useEffect(() => {
+        const fetchExperiences = async () => {
+            try {
+                const data = await getAllExperiences();
+                // التأكد من ترتيب البيانات إذا كانت قادمة في مصفوفة مرتبة
+                setExperiences(data);
+            } catch (err) {
+                console.error("Failed to load experiences on homepage:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        {
-            period: "2025",
-            title: "Interpreter",
-            company: "National Service",
-            description:
-                "Worked as an Interpreter during the national service while improving communication and teamwork skills."
-        },
+        fetchExperiences();
+    }, []);
 
-        {
-            period: "2023",
-            title: "Internship",
-            company: "BADR Bank",
-            description:
-                "Completed an internship focused on administration and communication while gaining professional experience."
-        }
-    ];
+   if (loading) {
+    return <div className="loading-text">Loading experiences...</div>;
+}
 
     return (
-
-        <section
-            id="experience"
-            className="experience"
-        >
-
+        <section id="experience" className="experience">
             <div className="experience-container">
-
                 <span className="section-subtitle">
                     Experience
                 </span>
@@ -46,40 +40,29 @@ function Experience() {
                 </h2>
 
                 <div className="timeline">
+                    {experiences.length === 0 ? (
+                        <p style={{ textAlign: 'center', color: '#666', gridColumn: '1/-1' }}>No experience records found.</p>
+                    ) : (
+                        experiences.map((item) => (
+                            <div className="timeline-item" key={item.id}>
+                                <div className="timeline-dot"></div>
 
-                    {experiences.map((item, index) => (
+                                <div className="timeline-content">
+                                    <span className="timeline-date">
+                                        {/* نستخدم هنا حقل duration القادم من قاعدة البيانات */}
+                                        {item.duration} 
+                                    </span>
 
-                        <div
-                            className="timeline-item"
-                            key={index}
-                        >
-
-                            <div className="timeline-dot"></div>
-
-                            <div className="timeline-content">
-
-                                <span className="timeline-date">
-                                    {item.period}
-                                </span>
-
-                                <h3>{item.title}</h3>
-
-                                <h4>{item.company}</h4>
-
-                                <p>{item.description}</p>
-
+                                    <h3>{item.title}</h3>
+                                    <h4>{item.company}</h4>
+                                    <p>{item.description}</p>
+                                </div>
                             </div>
-
-                        </div>
-
-                    ))}
-
+                        ))
+                    )}
                 </div>
-
             </div>
-
         </section>
-
     );
 }
 

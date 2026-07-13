@@ -45,9 +45,13 @@ app.get("/", (req, res) => {
 // ==============================
 // API Routes
 // ==============================
+const experienceRoutes = require("./src/routes/experiencer"); // Make sure the path exactly matches where you saved it
 
 app.use("/api/auth", authRoutes); 
 app.use("/api/projects", projectRoutes);
+
+// 2. Add this line right here to mount it!
+app.use("/api/experiences", experienceRoutes);
 
 // ==============================
 // Start Server
