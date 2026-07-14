@@ -1,15 +1,16 @@
-// frontend/src/pages/admin.jsx
 import React, { useState, useEffect } from 'react';
 import { getAllProjectsRequest, createProjectRequest, deleteProjectRequest } from '../services/projects';
-// قم بتحديث هذا السطر ليستدعي الملف الصحيح والجديد مباشرة
 import AdminExperience from "../components/adminexperience.jsx";
+// Import the new dynamic Education admin component
+import AdminEducation from "../components/admineducation.jsx";
+
 const Admin = () => {
-  // تتبع التبويب الحالي: 'projects' أو 'experience'
+  // Tabs: 'projects', 'experience', or 'education'
   const [activeTab, setActiveTab] = useState('projects');
 
   const [projects, setProjects] = useState([]);
   
-  // الحقول النصية الأساسية والجديدة للمشاريع
+  // Basic and new text fields for projects
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [description, setDescription] = useState('');
@@ -18,7 +19,7 @@ const Admin = () => {
   const [githubUrl, setGithubUrl] = useState('');
   const [liveUrl, setLiveUrl] = useState('');
   
-  // حقول الصورة والمعاينة
+  // Image and preview fields
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   
@@ -134,6 +135,20 @@ const Admin = () => {
         >
           Manage Experience
         </button>
+        <button 
+          onClick={() => setActiveTab('education')}
+          style={{
+            padding: '10px 20px',
+            cursor: 'pointer',
+            backgroundColor: activeTab === 'education' ? '#007bff' : '#e0e0e0',
+            color: activeTab === 'education' ? '#fff' : '#000',
+            border: 'none',
+            borderRadius: '4px',
+            fontWeight: 'bold'
+          }}
+        >
+          Manage Education
+        </button>
       </div>
 
       <hr />
@@ -218,12 +233,19 @@ const Admin = () => {
         </div>
       )}
 
-{/* ─── EXPERIENCE TAB CONTENT ─── */}
-{activeTab === 'experience' && (
-  <div style={{ marginTop: '10px' }}>
-    <AdminExperience />
-  </div>
-)}
+      {/* ─── EXPERIENCE TAB CONTENT ─── */}
+      {activeTab === 'experience' && (
+        <div style={{ marginTop: '10px' }}>
+          <AdminExperience />
+        </div>
+      )}
+
+      {/* ─── EDUCATION TAB CONTENT ─── */}
+      {activeTab === 'education' && (
+        <div style={{ marginTop: '10px' }}>
+          <AdminEducation />
+        </div>
+      )}
 
     </div>
   );

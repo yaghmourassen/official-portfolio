@@ -1,33 +1,42 @@
+import React, { useEffect, useState } from "react";
+import { getAllEducation } from "../services/education";
 import "../styles/education.css";
 
 function Education() {
+    const [educationData, setEducationData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const education = [
-        {
-            year: "2021 - 2023",
-            degree: "Master's Degree",
-            field: "Communication & Public Relations",
-            school: "Djilali Bounaama University"
-        },
-        {
-            year: "2018 - 2021",
-            degree: "Bachelor's Degree",
-            field: "Computer Science & Communication",
-            school: "Djilali Bounaama University"
-        },
-        {
-            year: "2017",
-            degree: "Baccalaureate",
-            field: "Literature & Philosophy",
-            school: "Abi Dhar El Ghifari High School"
-        }
-    ];
+    useEffect(() => {
+        const fetchEducation = async () => {
+            try {
+                const data = await getAllEducation();
+                setEducationData(data);
+            } catch (error) {
+                console.error("Error fetching academic records:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchEducation();
+    }, []);
+
+    if (loading) {
+        return (
+            <section id="education" className="education">
+                <div className="education-container">
+                    <span className="section-subtitle">Education</span>
+                    <h2 className="section-title">Academic Background</h2>
+                    <div style={{ textAlign: "center", color: "#666", marginTop: "2rem" }}>
+                        Loading...
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section id="education" className="education">
-
             <div className="education-container">
-
                 <span className="section-subtitle">
                     Education
                 </span>
@@ -37,13 +46,10 @@ function Education() {
                 </h2>
 
                 <div className="education-grid">
-
-                    {education.map((item, index) => (
-
-                        <div className="education-card" key={index}>
-
+                    {educationData.map((item) => (
+                        <div className="education-card" key={item.id}>
                             <span className="education-year">
-                                {item.year}
+                                {item.years}
                             </span>
 
                             <h3>
@@ -51,21 +57,16 @@ function Education() {
                             </h3>
 
                             <h4>
-                                {item.field}
+                                {item.fieldOfStudy}
                             </h4>
 
                             <p>
                                 {item.school}
                             </p>
-
                         </div>
-
                     ))}
-
                 </div>
-
             </div>
-
         </section>
     );
 }

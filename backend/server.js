@@ -53,6 +53,13 @@ app.use("/api/projects", projectRoutes);
 // 2. Add this line right here to mount it!
 app.use("/api/experiences", experienceRoutes);
 
+
+const educationRoutes = require('./src/routes/educationr');
+
+// ... other middlewares and routes
+app.use('/api/education', educationRoutes);
+
+
 // ==============================
 // Start Server
 // ==============================
