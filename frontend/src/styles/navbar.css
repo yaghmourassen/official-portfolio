@@ -47,3 +47,21 @@
     color:#38bdf8 !important;
 
 }
+/* ==========================
+   MOBILE NAVBAR FIX
+========================== */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background-color: #0f172a; /* نفس لون الناف بار */
+        padding: 20px;
+        margin-top: 15px;
+        border-radius: 8px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .nav-link {
+        margin-left: 0;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
