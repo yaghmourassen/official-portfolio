@@ -1,76 +1,55 @@
+import { useState } from 'react';
 import "../styles/footer.css";
-function Footer() {
+import ContactModal from './ContactModal';
 
+function Footer() {
     const currentYear = new Date().getFullYear();
+    const [showModal, setShowModal] = useState(false);
 
     return (
-
         <footer className="footer">
-
             <div className="container">
-
-                <div className="row">
-
-                    {/* Left */}
-
-                    <div className="col-lg-6">
-
-                        <h3 className="footer-logo">
-                            MY PORTFOLIO
-                        </h3>
-
+                <div className="row align-items-center">
+                    {/* Left: Logo & Description - التمركز في الموبايل والبدء من اليسار في الشاشات الكبيرة */}
+                    <div className="col-lg-6 mb-4 mb-lg-0 text-center text-lg-start">
+                        <h3 className="footer-logo">MY PORTFOLIO</h3>
                         <p className="footer-description">
-
-                            Passionate Full Stack Developer building
-                            modern, scalable and secure web applications.
-
+                            Computer Scientist specialized in Software Engineering, Networking, and Cybersecurity.
                         </p>
-
                     </div>
 
-                    {/* Right */}
-
+                    {/* Right: Social Icons - التمركز في الموبايل والبدء من اليمين في الشاشات الكبيرة */}
                     <div className="col-lg-6">
-
-                        <div className="footer-social">
-
-                            <a href="#">
+                        <div className="footer-social d-flex justify-content-center justify-content-lg-end gap-3">
+                            <a href="https://github.com/yaghmourassen" target="_blank" rel="noreferrer">
                                 <i className="bi bi-github"></i>
                             </a>
-
-                            <a href="#">
+                            <a href="https://www.linkedin.com/in/yaghmourassen-maoui-648729296/" target="_blank" rel="noreferrer">
                                 <i className="bi bi-linkedin"></i>
                             </a>
-
-                            <a href="#">
+                            
+                            {/* زر الإيميل الموحد */}
+                            <button className="email-btn" onClick={() => setShowModal(true)}>
                                 <i className="bi bi-envelope-fill"></i>
-                            </a>
+                            </button>
 
-                            <a href="#">
+                            <a href="https://www.facebook.com/alvaro.morata.igo/" target="_blank" rel="noreferrer">
                                 <i className="bi bi-facebook"></i>
                             </a>
-
                         </div>
-
                     </div>
-
                 </div>
 
-                <hr />
+                <hr className="footer-divider" />
 
-                <p className="copyright">
-
-                    © {currentYear} Maoui Yaghmourassen.
-                    All Rights Reserved.
-
+                <p className="copyright text-center">
+                    © {currentYear} <strong>Maoui Yaghmourassen</strong>. All Rights Reserved.
                 </p>
-
             </div>
 
+            <ContactModal show={showModal} handleClose={() => setShowModal(false)} />
         </footer>
-
     );
-
 }
 
 export default Footer;

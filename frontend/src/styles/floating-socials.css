@@ -1,0 +1,29 @@
+.floating-socials {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 9999; /* لضمان ظهورها فوق كل شيء */
+}
+
+.social-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 28px;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+.whatsapp { background-color: #25d366; }
+.telegram { background-color: #0088cc; }

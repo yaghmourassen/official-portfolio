@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-// Destructured to extract the sequelize instance from your config object
 const { sequelize } = require('../config/database');
 
 const Education = sequelize.define('Education', {
@@ -10,19 +9,24 @@ const Education = sequelize.define('Education', {
     },
     years: {
         type: DataTypes.STRING,
-        allowNull: false // e.g., "2021 - 2023"
+        allowNull: false
     },
     degree: {
         type: DataTypes.STRING,
-        allowNull: false // e.g., "Master's Degree"
+        allowNull: false
     },
     fieldOfStudy: {
         type: DataTypes.STRING,
-        allowNull: false // e.g., "Communication & Public Relations"
+        allowNull: false
     },
     school: {
         type: DataTypes.STRING,
-        allowNull: false // e.g., "Djilali Bounaama University"
+        allowNull: false
+    },
+    // أضف هذا السطر الجديد
+    certificateUrl: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 }, {
     tableName: 'educations',

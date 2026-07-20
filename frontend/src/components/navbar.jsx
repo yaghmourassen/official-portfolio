@@ -6,9 +6,10 @@ function Navbar() {
 
             <div className="container">
 
-                <a className="navbar-brand fw-bold" href="#hero">
-                    MY PORTFOLIO
-                </a>
+               <a className="navbar-brand fw-bold" href="#hero">
+    <span className="logo-my">MY</span>
+    <span className="logo-portfolio">PORTFOLIO</span>
+</a>
 
                 <button
                     className="navbar-toggler"

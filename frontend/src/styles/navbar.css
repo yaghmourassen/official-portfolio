@@ -14,14 +14,30 @@
 
 }
 
-.navbar-brand{
+.navbar-brand {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
-    color:#38bdf8 !important;
+/* تنسيق كلمة MY */
+.logo-my {
+    color: #ffffff; /* لون أبيض */
+    font-weight: 300; /* وزن خفيف */
+}
 
-    font-size:28px;
+/* تنسيق كلمة PORTFOLIO */
+.logo-portfolio {
+    color: #38bdf8; /* لون أزرق لتمييز الجزء الثاني */
+    font-weight: 800; /* وزن ثقيل */
+}
 
-    letter-spacing:2px;
-
+/* تأثير بسيط عند التحويم */
+.navbar-brand:hover .logo-portfolio {
+    color: #ffffff;
+    transition: 0.3s;
 }
 
 .nav-link{

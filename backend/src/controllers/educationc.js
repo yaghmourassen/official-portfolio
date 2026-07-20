@@ -11,8 +11,14 @@ const getAllEducation = async (req, res) => {
 
 const createEducation = async (req, res) => {
     try {
-        const { years, degree, fieldOfStudy, school } = req.body;
-        const newEducation = await educationService.createEducation({ years, degree, fieldOfStudy, school });
+        // تم تحديث هذا السطر ليشمل certificateUrl
+        const { years, degree, fieldOfStudy, school, certificateUrl } = req.body;
+        
+        // تمرير الحقل الجديد للـ service
+        const newEducation = await educationService.createEducation({ 
+            years, degree, fieldOfStudy, school, certificateUrl 
+        });
+        
         res.status(201).json(newEducation);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -22,6 +28,7 @@ const createEducation = async (req, res) => {
 const updateEducation = async (req, res) => {
     try {
         const { id } = req.params;
+        // هنا req.body سيقوم بتمرير certificateUrl إذا كان موجوداً في التحديث
         const updated = await educationService.updateEducation(id, req.body);
         if (!updated) {
             return res.status(404).json({ message: 'Education record not found' });
