@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getAllProjectsRequest, createProjectRequest, deleteProjectRequest } from '../services/projects';
 import AdminExperience from "../components/adminexperience.jsx";
-// Import the new dynamic Education admin component
 import AdminEducation from "../components/admineducation.jsx";
+// استيراد مكون إدارة المهارات (تأكد من إنشاء الملف أو مساره الصحيح)
+import AdminSkills from "../components/adminskills.jsx";
 
 const Admin = () => {
-  // Tabs: 'projects', 'experience', or 'education'
+  // Tabs: 'projects', 'experience', 'education', or 'skills'
   const [activeTab, setActiveTab] = useState('projects');
 
   const [projects, setProjects] = useState([]);
@@ -106,7 +107,7 @@ const Admin = () => {
       <p>Welcome, Didou! Manage your portfolio sections here.</p>
       
       {/* ─── TAB NAVIGATION BUTTONS ─── */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', marginTop: '15px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', marginTop: '15px', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setActiveTab('projects')}
           style={{
@@ -148,6 +149,20 @@ const Admin = () => {
           }}
         >
           Manage Education
+        </button>
+        <button 
+          onClick={() => setActiveTab('skills')}
+          style={{
+            padding: '10px 20px',
+            cursor: 'pointer',
+            backgroundColor: activeTab === 'skills' ? '#007bff' : '#e0e0e0',
+            color: activeTab === 'skills' ? '#fff' : '#000',
+            border: 'none',
+            borderRadius: '4px',
+            fontWeight: 'bold'
+          }}
+        >
+          Manage Skills
         </button>
       </div>
 
@@ -244,6 +259,13 @@ const Admin = () => {
       {activeTab === 'education' && (
         <div style={{ marginTop: '10px' }}>
           <AdminEducation />
+        </div>
+      )}
+
+      {/* ─── SKILLS TAB CONTENT ─── */}
+      {activeTab === 'skills' && (
+        <div style={{ marginTop: '10px' }}>
+          <AdminSkills />
         </div>
       )}
 

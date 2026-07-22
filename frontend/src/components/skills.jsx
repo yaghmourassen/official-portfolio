@@ -1,7 +1,9 @@
-import React, { useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/skills.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { getSkills } from "../services/skills";
 
+// Import all icons you might use
 import {
     FaReact,
     FaNodeJs,
@@ -13,7 +15,10 @@ import {
     FaHtml5,
     FaCss3Alt,
     FaJs,
-    FaPython
+    FaPython,
+    FaShieldAlt,
+    FaLock,
+    FaCode
 } from "react-icons/fa";
 
 import {
@@ -26,61 +31,66 @@ import {
     SiExpress
 } from "react-icons/si";
 
-function Skills() {
-    const skillCategories = [
-        {
-            categoryTitle: "Programming Languages",
-            skills: [
-                { icon: <FaJava />, title: "Java", description: "Object-oriented programming and backend systems." },
-                { icon: <FaPython />, title: "Python", description: "Automation, scripting and AI projects." },
-                { icon: <FaJs />, title: "JavaScript", description: "Dynamic web development." },
-                { icon: <FaHtml5 />, title: "HTML5", description: "Semantic web structure." },
-                { icon: <FaCss3Alt />, title: "CSS3", description: "Responsive and modern designs." }
-            ]
-        },
-        {
-            categoryTitle: "Frameworks",
-            skills: [
-                { icon: <SiSpringboot />, title: "Spring Boot", description: "Enterprise Java backend development." },
-                { icon: <FaLaravel />, title: "Laravel", description: "Powerful PHP web applications." },
-                { icon: <SiFlutter />, title: "Flutter", description: "Cross-platform mobile application development." },
-                { icon: <SiExpress />, title: "Express.js", description: "Developing RESTful APIs and backend services." }
-            ]
-        },
-        {
-            categoryTitle: "Libraries",
-            skills: [
-                { icon: <FaReact />, title: "React", description: "Building modern and interactive user interfaces." },
-                { icon: <SiTailwindcss />, title: "Tailwind CSS", description: "Utility-first CSS framework." }
-            ]
-        },
-        {
-            categoryTitle: "DevOps",
-            skills: [
-                { icon: <FaDocker />, title: "Docker", description: "Containerization and deployment." },
-                { icon: <FaGitAlt />, title: "Git", description: "Version control and collaboration." },
-                { icon: <FaGithub />, title: "GitHub", description: "Code hosting and project management." },
-                { icon: <FaNodeJs />, title: "Node.js", description: "Server-side JavaScript environment." }
-            ]
-        },
-        {
-            categoryTitle: "Networking",
-            skills: [
-                { icon: <SiMysql />, title: "MySQL", description: "Relational database management." },
-                { icon: <SiMongodb />, title: "MongoDB", description: "NoSQL database solutions." },
-                { icon: <SiFirebase />, title: "Firebase", description: "Authentication and cloud services." }
-            ]
-        },
-        {
-            categoryTitle: "Securities",
-            skills: [
-                { icon: <FaGithub />, title: "Auth & Sec", description: "Secure access control and version tokens." },
-                { icon: <FaDocker />, title: "Container Security", description: "Isolated environments and safe deployment." }
-            ]
-        }
-    ];
+const ICON_MAP = {
+    FaNodeJs: <FaNodeJs />,
+    FaReact: <FaReact />,
+    FaJs: <FaJs />,
+    FaJava: <FaJava />,
+    FaPython: <FaPython />,
+    FaHtml5: <FaHtml5 />,
+    FaCss3Alt: <FaCss3Alt />,
+    FaLaravel: <FaLaravel />,
+    FaDocker: <FaDocker />,
+    FaGitAlt: <FaGitAlt />,
+    FaGithub: <FaGithub />,
+    SiSpringboot: <SiSpringboot />,
+    SiMongodb: <SiMongodb />,
+    SiMysql: <SiMysql />,
+    SiFlutter: <SiFlutter />,
+    SiFirebase: <SiFirebase />,
+    SiTailwindcss: <SiTailwindcss />,
+    SiExpress: <SiExpress />,
+    FaShieldAlt: <FaShieldAlt />,
+    FaLock: <FaLock />
+};
 
+function Skills() {
+    const [skillCategories, setSkillCategories] = useState([]);
     const rowRefs = useRef([]);
+
+    useEffect(() => {
+        fetchAndGroupSkills();
+    }, []);
+
+    const fetchAndGroupSkills = async () => {
+        try {
+            const response = await getSkills();
+            const data = response.data || response;
+
+            // Group skills by categoryTitle
+            const grouped = data.reduce((acc, skill) => {
+                const category = skill.categoryTitle || "Other";
+                if (!acc[category]) {
+                    acc[category] = [];
+                }
+                acc[category].push({
+                    ...skill,
+                    icon: ICON_MAP[skill.iconName] || <FaCode /> // Default icon fallback
+                });
+                return acc;
+            }, {});
+
+            // Format into expected array structure
+            const categoriesArray = Object.keys(grouped).map((categoryTitle) => ({
+                categoryTitle,
+                skills: grouped[categoryTitle]
+            }));
+
+            setSkillCategories(categoriesArray);
+        } catch (error) {
+            console.error("Failed to fetch skills:", error);
+        }
+    };
 
     const scrollRow = (index, direction) => {
         const row = rowRefs.current[index];
@@ -119,7 +129,7 @@ function Skills() {
                                         ref={(el) => (rowRefs.current[groupIdx] = el)}
                                     >
                                         {group.skills.map((skill, index) => (
-                                            <div className="skill-card" key={index}>
+                                            <div className="skill-card" key={skill.id || index}>
                                                 <div className="skill-icon">{skill.icon}</div>
                                                 <h3>{skill.title}</h3>
                                                 <p>{skill.description}</p>

@@ -59,6 +59,11 @@ const educationRoutes = require('./src/routes/educationr');
 // ... other middlewares and routes
 app.use('/api/education', educationRoutes);
 
+const skillRoutes = require('./src/routes/skillr');
+
+// استخدامه مع مسار الأساس
+app.use('/api/skills', skillRoutes);
+
 
 // ==============================
 // Start Server
