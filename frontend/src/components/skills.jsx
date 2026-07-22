@@ -3,57 +3,6 @@ import "../styles/skills.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getSkills } from "../services/skills";
 
-// Import all icons you might use
-import {
-    FaReact,
-    FaNodeJs,
-    FaLaravel,
-    FaJava,
-    FaDocker,
-    FaGitAlt,
-    FaGithub,
-    FaHtml5,
-    FaCss3Alt,
-    FaJs,
-    FaPython,
-    FaShieldAlt,
-    FaLock,
-    FaCode
-} from "react-icons/fa";
-
-import {
-    SiSpringboot,
-    SiMongodb,
-    SiMysql,
-    SiFlutter,
-    SiFirebase,
-    SiTailwindcss,
-    SiExpress
-} from "react-icons/si";
-
-const ICON_MAP = {
-    FaNodeJs: <FaNodeJs />,
-    FaReact: <FaReact />,
-    FaJs: <FaJs />,
-    FaJava: <FaJava />,
-    FaPython: <FaPython />,
-    FaHtml5: <FaHtml5 />,
-    FaCss3Alt: <FaCss3Alt />,
-    FaLaravel: <FaLaravel />,
-    FaDocker: <FaDocker />,
-    FaGitAlt: <FaGitAlt />,
-    FaGithub: <FaGithub />,
-    SiSpringboot: <SiSpringboot />,
-    SiMongodb: <SiMongodb />,
-    SiMysql: <SiMysql />,
-    SiFlutter: <SiFlutter />,
-    SiFirebase: <SiFirebase />,
-    SiTailwindcss: <SiTailwindcss />,
-    SiExpress: <SiExpress />,
-    FaShieldAlt: <FaShieldAlt />,
-    FaLock: <FaLock />
-};
-
 function Skills() {
     const [skillCategories, setSkillCategories] = useState([]);
     const rowRefs = useRef([]);
@@ -67,20 +16,16 @@ function Skills() {
             const response = await getSkills();
             const data = response.data || response;
 
-            // Group skills by categoryTitle
+            // Group skills dynamically by categoryTitle
             const grouped = data.reduce((acc, skill) => {
                 const category = skill.categoryTitle || "Other";
                 if (!acc[category]) {
                     acc[category] = [];
                 }
-                acc[category].push({
-                    ...skill,
-                    icon: ICON_MAP[skill.iconName] || <FaCode /> // Default icon fallback
-                });
+                acc[category].push(skill);
                 return acc;
             }, {});
 
-            // Format into expected array structure
             const categoriesArray = Object.keys(grouped).map((categoryTitle) => ({
                 categoryTitle,
                 skills: grouped[categoryTitle]
@@ -130,7 +75,18 @@ function Skills() {
                                     >
                                         {group.skills.map((skill, index) => (
                                             <div className="skill-card" key={skill.id || index}>
-                                                <div className="skill-icon">{skill.icon}</div>
+                                                <div className="skill-icon">
+                                                    {/* Fully dynamic CDN icon loader */}
+                                                    <img 
+                                                        src={`https://cdn.simpleicons.org/${skill.iconName}`} 
+                                                        alt={skill.title} 
+                                                        style={{ width: "36px", height: "36px" }}
+                                                        onError={(e) => {
+                                                            // Fallback if icon slug isn't found
+                                                            e.target.style.display = 'none';
+                                                        }}
+                                                    />
+                                                </div>
                                                 <h3>{skill.title}</h3>
                                                 <p>{skill.description}</p>
                                             </div>

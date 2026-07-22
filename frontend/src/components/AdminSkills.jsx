@@ -9,37 +9,13 @@ const ALLOWED_CATEGORIES = [
     'Securities'
 ];
 
-// List of available icons for selection
-const AVAILABLE_ICONS = [
-    { label: 'Node.js (FaNodeJs)', value: 'FaNodeJs' },
-    { label: 'React (FaReact)', value: 'FaReact' },
-    { label: 'JavaScript (FaJs)', value: 'FaJs' },
-    { label: 'Java (FaJava)', value: 'FaJava' },
-    { label: 'Python (FaPython)', value: 'FaPython' },
-    { label: 'HTML5 (FaHtml5)', value: 'FaHtml5' },
-    { label: 'CSS3 (FaCss3Alt)', value: 'FaCss3Alt' },
-    { label: 'Laravel (FaLaravel)', value: 'FaLaravel' },
-    { label: 'Docker (FaDocker)', value: 'FaDocker' },
-    { label: 'Git (FaGitAlt)', value: 'FaGitAlt' },
-    { label: 'GitHub (FaGithub)', value: 'FaGithub' },
-    { label: 'Spring Boot (SiSpringboot)', value: 'SiSpringboot' },
-    { label: 'MongoDB (SiMongodb)', value: 'SiMongodb' },
-    { label: 'MySQL (SiMysql)', value: 'SiMysql' },
-    { label: 'Flutter (SiFlutter)', value: 'SiFlutter' },
-    { label: 'Firebase (SiFirebase)', value: 'SiFirebase' },
-    { label: 'Tailwind CSS (SiTailwindcss)', value: 'SiTailwindcss' },
-    { label: 'Express.js (SiExpress)', value: 'SiExpress' },
-    { label: 'Security Shield (FaShieldAlt)', value: 'FaShieldAlt' },
-    { label: 'Security Lock (FaLock)', value: 'FaLock' }
-];
-
 function AdminSkills() {
     const [skills, setSkills] = useState([]);
     const [formData, setFormData] = useState({
         categoryTitle: ALLOWED_CATEGORIES[0],
         title: '',
         description: '',
-        iconName: AVAILABLE_ICONS[0].value
+        iconName: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -57,6 +33,17 @@ function AdminSkills() {
         }
     };
 
+    // Automatically convert typed skill name to a standard SimpleIcons slug
+    const handleTitleChange = (e) => {
+        const val = e.target.value;
+        const generatedSlug = val.toLowerCase().replace(/[\s\.\-]+/g, ''); // "Node.js" -> "nodejs"
+        setFormData({
+            ...formData,
+            title: val,
+            iconName: generatedSlug
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -67,7 +54,7 @@ function AdminSkills() {
                 categoryTitle: ALLOWED_CATEGORIES[0], 
                 title: '', 
                 description: '', 
-                iconName: AVAILABLE_ICONS[0].value 
+                iconName: '' 
             });
             fetchSkills();
         } catch (err) {
@@ -102,41 +89,50 @@ function AdminSkills() {
                     style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}
                 >
                     {ALLOWED_CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>
-                            {cat}
-                        </option>
+                        <option key={cat} value={cat}>{cat}</option>
                     ))}
                 </select>
 
+                <label style={{ fontWeight: 'bold' }}>Skill Title</label>
                 <input 
                     type="text" 
-                    placeholder="Skill Title (e.g. Node.js)" 
+                    placeholder="Type skill name (e.g. Node.js, Express, Docker)" 
                     value={formData.title} 
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    onChange={handleTitleChange}
                     required
                     style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}
                 />
-                
+
+                <label style={{ fontWeight: 'bold' }}>Icon Slug (Auto-generated or custom)</label>
+                <input 
+                    type="text" 
+                    placeholder="e.g. nodedotjs, express, docker" 
+                    value={formData.iconName} 
+                    onChange={(e) => setFormData({...formData, iconName: e.target.value.toLowerCase()})}
+                    required
+                    style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}
+                />
+
+                {/* Dynamic Icon Preview */}
+                {formData.iconName && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                        <span>Icon Preview:</span>
+                        <img 
+                            src={`https://cdn.simpleicons.org/${formData.iconName}`} 
+                            alt="Live Preview" 
+                            style={{ width: '28px', height: '28px' }}
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                            onLoad={(e) => { e.target.style.display = 'block'; }}
+                        />
+                    </div>
+                )}
+
                 <textarea 
                     placeholder="Description" 
                     value={formData.description} 
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}
                 />
-
-                <label style={{ fontWeight: 'bold' }}>Select Icon</label>
-                <select 
-                    value={formData.iconName} 
-                    onChange={(e) => setFormData({...formData, iconName: e.target.value})}
-                    required
-                    style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccc' }}
-                >
-                    {AVAILABLE_ICONS.map((icon) => (
-                        <option key={icon.value} value={icon.value}>
-                            {icon.label}
-                        </option>
-                    ))}
-                </select>
 
                 <button type="submit" disabled={loading} style={{ padding: '10px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
                     {loading ? 'Adding...' : 'Add New Skill'}
@@ -147,7 +143,13 @@ function AdminSkills() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '600px' }}>
                 {skills.map((skill) => (
                     <div key={skill.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                        <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img 
+                                src={`https://cdn.simpleicons.org/${skill.iconName}`} 
+                                alt={skill.title} 
+                                style={{ width: '20px', height: '20px' }}
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
                             <strong>{skill.categoryTitle}</strong> &gt; {skill.title} <span style={{ color: '#666', fontSize: '0.85rem' }}>({skill.iconName})</span>
                         </div>
                         <button onClick={() => handleDelete(skill.id)} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>
