@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+import SEO from './components/SEO'; // استدعاء مكون الـ SEO الذي أنشأناه
 import Home from './pages/home'; 
 import Login from './pages/login';
-import Admin from './pages/admin';
 import './App.css'; 
+
+// التحميل الكسول لصفحة لوحة التحكم (Admin) لتكون مخفية وثقيلة التحميل فقط عند الحاجة
+const Admin = lazy(() => import('./pages/admin'));
 
 function App() {
   const [view, setView] = useState('portfolio'); 
@@ -23,12 +26,21 @@ function App() {
 
   return (
     <div className="App">
+      {/* تطبيق وسوم الـ SEO لتظهر في محركات البحث لجعل موقعك احترافياً */}
+      <SEO title="Home" />
+
       {/* 1. العرض الافتراضي لجميع الزوار (الموقع العام) */}
       {view === 'portfolio' && <Home />}
       
       {/* 2. منطقة الإدارة: محمية ومخفية خلف الرابط السري */}
       {view === 'admin' && (
-        isAuthenticated ? <Admin /> : <Login onLogin={handleLoginSuccess} />
+        isAuthenticated ? (
+          <Suspense fallback={<div className="text-center py-5">Loading Admin...</div>}>
+            <Admin />
+          </Suspense>
+        ) : (
+          <Login onLogin={handleLoginSuccess} />
+        )
       )}
     </div>
   );
