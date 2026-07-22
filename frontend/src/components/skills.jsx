@@ -1,4 +1,6 @@
+import React, { useRef } from "react";
 import "../styles/skills.css";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import {
     FaReact,
@@ -25,135 +27,119 @@ import {
 } from "react-icons/si";
 
 function Skills() {
-
-    const skills = [
+    const skillCategories = [
         {
-            icon: <FaReact />,
-            title: "React",
-            description: "Building modern and interactive user interfaces."
+            categoryTitle: "Programming Languages",
+            skills: [
+                { icon: <FaJava />, title: "Java", description: "Object-oriented programming and backend systems." },
+                { icon: <FaPython />, title: "Python", description: "Automation, scripting and AI projects." },
+                { icon: <FaJs />, title: "JavaScript", description: "Dynamic web development." },
+                { icon: <FaHtml5 />, title: "HTML5", description: "Semantic web structure." },
+                { icon: <FaCss3Alt />, title: "CSS3", description: "Responsive and modern designs." }
+            ]
         },
         {
-            icon: <SiExpress />,
-            title: "Express.js",
-            description: "Developing RESTful APIs and backend services."
+            categoryTitle: "Frameworks",
+            skills: [
+                { icon: <SiSpringboot />, title: "Spring Boot", description: "Enterprise Java backend development." },
+                { icon: <FaLaravel />, title: "Laravel", description: "Powerful PHP web applications." },
+                { icon: <SiFlutter />, title: "Flutter", description: "Cross-platform mobile application development." },
+                { icon: <SiExpress />, title: "Express.js", description: "Developing RESTful APIs and backend services." }
+            ]
         },
         {
-            icon: <FaNodeJs />,
-            title: "Node.js",
-            description: "Server-side JavaScript development."
+            categoryTitle: "Libraries",
+            skills: [
+                { icon: <FaReact />, title: "React", description: "Building modern and interactive user interfaces." },
+                { icon: <SiTailwindcss />, title: "Tailwind CSS", description: "Utility-first CSS framework." }
+            ]
         },
         {
-            icon: <SiSpringboot />,
-            title: "Spring Boot",
-            description: "Enterprise Java backend development."
+            categoryTitle: "DevOps",
+            skills: [
+                { icon: <FaDocker />, title: "Docker", description: "Containerization and deployment." },
+                { icon: <FaGitAlt />, title: "Git", description: "Version control and collaboration." },
+                { icon: <FaGithub />, title: "GitHub", description: "Code hosting and project management." },
+                { icon: <FaNodeJs />, title: "Node.js", description: "Server-side JavaScript environment." }
+            ]
         },
         {
-            icon: <FaLaravel />,
-            title: "Laravel",
-            description: "Powerful PHP web applications."
+            categoryTitle: "Networking",
+            skills: [
+                { icon: <SiMysql />, title: "MySQL", description: "Relational database management." },
+                { icon: <SiMongodb />, title: "MongoDB", description: "NoSQL database solutions." },
+                { icon: <SiFirebase />, title: "Firebase", description: "Authentication and cloud services." }
+            ]
         },
         {
-            icon: <FaJava />,
-            title: "Java",
-            description: "Object-oriented programming and backend systems."
-        },
-        {
-            icon: <FaPython />,
-            title: "Python",
-            description: "Automation, scripting and AI projects."
-        },
-        {
-            icon: <SiFlutter />,
-            title: "Flutter",
-            description: "Cross-platform mobile application development."
-        },
-        {
-            icon: <SiFirebase />,
-            title: "Firebase",
-            description: "Authentication, Firestore and cloud services."
-        },
-        {
-            icon: <SiMysql />,
-            title: "MySQL",
-            description: "Relational database management."
-        },
-        {
-            icon: <SiMongodb />,
-            title: "MongoDB",
-            description: "NoSQL database solutions."
-        },
-        {
-            icon: <FaDocker />,
-            title: "Docker",
-            description: "Containerization and deployment."
-        },
-        {
-            icon: <FaGitAlt />,
-            title: "Git",
-            description: "Version control and collaboration."
-        },
-        {
-            icon: <FaGithub />,
-            title: "GitHub",
-            description: "Code hosting and project management."
-        },
-        {
-            icon: <FaHtml5 />,
-            title: "HTML5",
-            description: "Semantic web structure."
-        },
-        {
-            icon: <FaCss3Alt />,
-            title: "CSS3",
-            description: "Responsive and modern designs."
-        },
-        {
-            icon: <FaJs />,
-            title: "JavaScript",
-            description: "Dynamic web development."
-        },
-        {
-            icon: <SiTailwindcss />,
-            title: "Tailwind CSS",
-            description: "Utility-first CSS framework."
+            categoryTitle: "Securities",
+            skills: [
+                { icon: <FaGithub />, title: "Auth & Sec", description: "Secure access control and version tokens." },
+                { icon: <FaDocker />, title: "Container Security", description: "Isolated environments and safe deployment." }
+            ]
         }
     ];
 
+    const rowRefs = useRef([]);
+
+    const scrollRow = (index, direction) => {
+        const row = rowRefs.current[index];
+        if (row) {
+            const scrollAmount = 300;
+            row.scrollBy({
+                left: direction === "left" ? -scrollAmount : scrollAmount,
+                behavior: "smooth"
+            });
+        }
+    };
+
     return (
         <section id="skills" className="skills">
-
             <div className="skills-container">
+                <span className="section-subtitle">My Skills</span>
+                <h2 className="section-title">Technologies I Work With</h2>
 
-                <span className="section-subtitle">
-                    My Skills
-                </span>
+                <div className="skills-categories-wrapper">
+                    {skillCategories.map((group, groupIdx) => (
+                        <div className="skill-category-group" key={groupIdx}>
+                            <h3 className="category-title">{group.categoryTitle}</h3>
 
-                <h2 className="section-title">
-                    Technologies I Work With
-                </h2>
+                            <div className="marquee-container">
+                                <button 
+                                    className="scroll-btn left" 
+                                    onClick={() => scrollRow(groupIdx, "left")}
+                                    aria-label="Scroll left"
+                                >
+                                    <FaChevronLeft />
+                                </button>
 
-                <div className="skills-grid">
+                                <div className="marquee-wrapper">
+                                    <div 
+                                        className="skills-row" 
+                                        ref={(el) => (rowRefs.current[groupIdx] = el)}
+                                    >
+                                        {group.skills.map((skill, index) => (
+                                            <div className="skill-card" key={index}>
+                                                <div className="skill-icon">{skill.icon}</div>
+                                                <h3>{skill.title}</h3>
+                                                <p>{skill.description}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
 
-                    {skills.map((skill, index) => (
-
-                        <div className="skill-card" key={index}>
-
-                            <div className="skill-icon">
-                                {skill.icon}
+                                <button 
+                                    className="scroll-btn right" 
+                                    onClick={() => scrollRow(groupIdx, "right")}
+                                    aria-label="Scroll right"
+                                >
+                                    <FaChevronRight />
+                                </button>
                             </div>
-
-                            <h3>{skill.title}</h3>
-
-                            <p>{skill.description}</p>
-
                         </div>
-
                     ))}
-
                 </div>
-
             </div>
-
         </section>
     );
 }
