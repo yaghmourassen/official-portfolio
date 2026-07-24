@@ -3,6 +3,83 @@ import "../styles/skills.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getSkills } from "../services/skills";
 
+/**
+ * Dynamic Icon Component
+ * Resolves icons asynchronously across Devicon, Simple Icons, and Iconify.
+ */
+const DynamicIcon = ({ name, title }) => {
+    const [iconUrl, setIconUrl] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        const searchQuery = (name || title || "").toLowerCase().trim();
+
+        if (!searchQuery) {
+            setLoading(false);
+            return;
+        }
+
+        const resolveIcon = async () => {
+            const cleanSlug = searchQuery.replace(/[^a-z0-9]/g, "");
+
+            // 1. Check Devicon first (Best for languages like Java, C++, Python, MySQL)
+            const deviconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${cleanSlug}/${cleanSlug}-original.svg`;
+            try {
+                const devRes = await fetch(deviconUrl, { method: "HEAD" });
+                if (devRes.ok && isMounted) {
+                    setIconUrl(deviconUrl);
+                    setLoading(false);
+                    return;
+                }
+            } catch (err) {
+                // Continue to next provider on failure
+            }
+
+            // 2. Query Iconify Search API (Covers 150k+ icons: Cisco, JWT, Firewalls, IDS, etc.)
+            try {
+                const searchRes = await fetch(
+                    `https://api.iconify.design/search?query=${encodeURIComponent(searchQuery)}&limit=1`
+                );
+                const searchData = await searchRes.json();
+
+                if (searchData.icons && searchData.icons.length > 0 && isMounted) {
+                    const [prefix, iconName] = searchData.icons[0].split(":");
+                    setIconUrl(`https://api.iconify.design/${prefix}/${iconName}.svg`);
+                    setLoading(false);
+                    return;
+                }
+            } catch (err) {
+                console.error("Icon search failed for:", searchQuery, err);
+            }
+
+            if (isMounted) setLoading(false);
+        };
+
+        resolveIcon();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [name, title]);
+
+    if (loading) return <div className="icon-skeleton"></div>;
+
+    if (!iconUrl) {
+        // Fallback badge if no icon matches the input
+        const fallbackChar = (title || name || "?").charAt(0).toUpperCase();
+        return <div className="dynamic-badge">{fallbackChar}</div>;
+    }
+
+    return (
+        <img 
+            src={iconUrl} 
+            alt={title || name} 
+            style={{ width: "36px", height: "36px", objectFit: "contain" }} 
+        />
+    );
+};
+
 function Skills() {
     const [skillCategories, setSkillCategories] = useState([]);
     const rowRefs = useRef([]);
@@ -76,16 +153,7 @@ function Skills() {
                                         {group.skills.map((skill, index) => (
                                             <div className="skill-card" key={skill.id || index}>
                                                 <div className="skill-icon">
-                                                    {/* Fully dynamic CDN icon loader */}
-                                                    <img 
-                                                        src={`https://cdn.simpleicons.org/${skill.iconName}`} 
-                                                        alt={skill.title} 
-                                                        style={{ width: "36px", height: "36px" }}
-                                                        onError={(e) => {
-                                                            // Fallback if icon slug isn't found
-                                                            e.target.style.display = 'none';
-                                                        }}
-                                                    />
+                                                    <DynamicIcon name={skill.iconName} title={skill.title} />
                                                 </div>
                                                 <h3>{skill.title}</h3>
                                                 <p>{skill.description}</p>

@@ -6,23 +6,31 @@ const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(''); // إعادة تهيئة الأخطاء عند كل محاولة
-
-    try {
-      const data = await loginRequest(username, password);
-      
-      if (data.success) {
-        onLogin(true); // إذا نجحت العملية، نقوم بتغيير الحالة لفتح الـ Dashboard
-      } else {
-        setError(data.message || 'بيانات الدخول غير صحيحة');
+  try {
+    const data = await loginRequest(username, password);
+    
+    if (data.success) {
+      // 1. حفظ التوكين وحالة الدخول في المتصفح
+      if (data.token) {
+        localStorage.setItem('adminToken', data.token);
       }
-    } catch (err) {
-      setError('حدث خطأ في الاتصال بالسيرفر. تأكد من تشغيل الـ Backend.');
+      localStorage.setItem('isLoggedIn', 'true');
+
+      // 2. تحديث الحالة في React
+      onLogin(true); 
+    } else {
+      setError(data.message || 'بيانات الدخول غير صحيحة');
     }
-  };
+  } catch (err) {
+    setError('حدث خطأ في الاتصال بالسيرفر. تأكد من تشغيل الـ Backend.');
+  }
+};
+
+
 
   return (
     <div className="login-container">

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { getAllProjectsRequest, createProjectRequest, deleteProjectRequest } from '../services/projects';
 import AdminExperience from "../components/adminexperience.jsx";
 import AdminEducation from "../components/admineducation.jsx";
-// استيراد مكون إدارة المهارات (تأكد من إنشاء الملف أو مساره الصحيح)
 import AdminSkills from "../components/adminskills.jsx";
 
-const Admin = () => {
+const Admin = ({ onLogout }) => {
   // Tabs: 'projects', 'experience', 'education', or 'skills'
   const [activeTab, setActiveTab] = useState('projects');
 
@@ -103,11 +102,37 @@ const Admin = () => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h1>Admin Dashboard</h1>
-      <p>Welcome, Didou! Manage your portfolio sections here.</p>
       
+      {/* ─── HEADER & LOGOUT BUTTON ─── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ margin: 0 }}>Admin Dashboard</h1>
+          <p style={{ margin: '5px 0 0 0', color: '#666' }}>Welcome! Manage your portfolio sections here.</p>
+        </div>
+        
+        {onLogout && (
+          <button 
+            onClick={onLogout} 
+            style={{ 
+              backgroundColor: '#dc3545', 
+              color: '#fff', 
+              border: 'none', 
+              padding: '10px 18px', 
+              borderRadius: '5px', 
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}
+          >
+            Logout
+          </button>
+        )}
+      </div>
+
+      <hr style={{ margin: '20px 0' }} />
+
       {/* ─── TAB NAVIGATION BUTTONS ─── */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', marginTop: '15px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setActiveTab('projects')}
           style={{
@@ -165,8 +190,6 @@ const Admin = () => {
           Manage Skills
         </button>
       </div>
-
-      <hr />
 
       {/* ─── PROJECTS TAB CONTENT ─── */}
       {activeTab === 'projects' && (
