@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { getAllProjectsRequest, createProjectRequest, deleteProjectRequest } from '../services/projects';
 
 // ==========================================
@@ -130,8 +131,11 @@ const AdminProjects = () => {
   const [githubUrl, setGithubUrl] = useState('');
   const [liveUrl, setLiveUrl] = useState('');
 
-  const [imageFiles, setImageFiles] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
+  // 1. Cover Image File
+  const [coverFile, setCoverFile] = useState(null);
+  
+  // 2. Extra Screenshot Files
+  const [extraFiles, setExtraFiles] = useState([]);
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -153,18 +157,17 @@ const AdminProjects = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length > 0) {
-      setImageFiles(prev => [...prev, ...files]);
-      const newPreviews = files.map(file => URL.createObjectURL(file));
-      setImagePreviews(prev => [...prev, ...newPreviews]);
-    }
-  };
+  // Fonction de téléversement vers Cloudinary
+  const uploadToCloudinary = async (fileToUpload) => {
+    const formData = new FormData();
+    formData.append("file", fileToUpload);
+    formData.append("upload_preset", "my_portfolio_preset"); 
 
-  const removeSelectedImage = (index) => {
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
-    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+    const res = await axios.post(
+      "https://api.cloudinary.com/v1_1/dlrwrp487/image/upload", 
+      formData
+    );
+    return res.data.secure_url;
   };
 
   const handleAddProject = async (e) => {
@@ -173,13 +176,20 @@ const AdminProjects = () => {
     setLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('subtitle', subtitle);
-      formData.append('description', description);
-      formData.append('category', category);
-      formData.append('github_url', githubUrl);
-      formData.append('live_url', liveUrl);
+      let coverUrl = '';
+      let extraUrls = [];
+
+      // 1. Upload Cover Image vers Cloudinary
+      if (coverFile) {
+        coverUrl = await uploadToCloudinary(coverFile);
+      }
+
+      // 2. Upload Multiple Extra Screenshots vers Cloudinary
+      if (extraFiles.length > 0) {
+        extraUrls = await Promise.all(
+          extraFiles.map(file => uploadToCloudinary(file))
+        );
+      }
 
       const techNames = parseTechnologies(technologies);
       const techObjects = techNames.map(name => ({
@@ -187,16 +197,19 @@ const AdminProjects = () => {
         iconName: cleanIconKey(name)
       }));
 
-      formData.append('technologies', JSON.stringify(techObjects));
+      const projectData = {
+        title,
+        subtitle,
+        description,
+        category,
+        github_url: githubUrl,
+        live_url: liveUrl,
+        image: coverUrl,        // Image de couverture principale
+        images: extraUrls,      // Tableau des URLs des images secondaires
+        technologies: techObjects
+      };
 
-      if (imageFiles.length > 0) {
-        formData.append('image', imageFiles[0]);
-        imageFiles.forEach(file => {
-          formData.append('images', file);
-        });
-      }
-
-      const res = await createProjectRequest(formData);
+      const res = await createProjectRequest(projectData);
 
       if (res && (res.project || res.success || res.id || res._id)) {
         setMessage('✓ Projet ajouté avec succès !');
@@ -207,15 +220,15 @@ const AdminProjects = () => {
         setTechnologies('');
         setGithubUrl('');
         setLiveUrl('');
-        setImageFiles([]);
-        setImagePreviews([]);
+        setCoverFile(null);
+        setExtraFiles([]);
         fetchProjects();
       } else {
         setMessage('✗ Échec de l\'ajout. Vérifie la console serveur.');
       }
     } catch (error) {
       console.error(error);
-      setMessage('✗ Erreur serveur (500). Vérifie tes logs Express.');
+      setMessage('✗ Erreur lors de la sauvegarde du projet.');
     } finally {
       setLoading(false);
     }
@@ -280,47 +293,46 @@ const AdminProjects = () => {
           <input type="url" placeholder="Live Demo Link (https://...)" value={liveUrl} onChange={e => setLiveUrl(e.target.value)} style={{ flex: 1, padding: '10px' }} />
         </div>
 
-        <div style={{ border: '1px dashed #ccc', padding: '15px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            Project Screenshots / Images:
-          </label>
-          <input type="file" accept="image/*" multiple onChange={handleImageChange} />
+        {/* SECTION GESTION DES IMAGES CLOUDINARY */}
+        <div style={{ border: '1px dashed #ccc', padding: '15px', borderRadius: '5px', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          
+          {/* 1. Cover Image */}
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              Project Cover Image (Primary):
+            </label>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => setCoverFile(e.target.files[0])} 
+              style={{ padding: '5px', width: '100%' }} 
+            />
+            {coverFile && <small style={{ color: 'green' }}>Selected Cover: {coverFile.name}</small>}
+          </div>
 
-          {imagePreviews.length > 0 && (
-            <div style={{ marginTop: '12px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {imagePreviews.map((src, index) => (
-                <div key={index} style={{ position: 'relative', width: '100px', height: '65px' }}>
-                  <img src={src} alt={`Preview ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }} />
-                  <button
-                    type="button"
-                    onClick={() => removeSelectedImage(index)}
-                    style={{
-                      position: 'absolute',
-                      top: '-5px',
-                      right: '-5px',
-                      background: '#dc3545',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '18px',
-                      height: '18px',
-                      cursor: 'pointer',
-                      fontSize: '11px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* 2. Extra Screenshots (Multiple) */}
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              Additional Screenshots / Gallery Images (Multiple):
+            </label>
+            <input 
+              type="file" 
+              accept="image/*" 
+              multiple 
+              onChange={(e) => setExtraFiles(Array.from(e.target.files))} 
+              style={{ padding: '5px', width: '100%' }} 
+            />
+            {extraFiles.length > 0 && (
+              <small style={{ color: 'blue' }}>
+                {extraFiles.length} additional image(s) selected
+              </small>
+            )}
+          </div>
+
         </div>
 
         <button type="submit" disabled={loading} style={{ padding: '12px', cursor: 'pointer', background: '#28a745', color: '#fff', border: 'none', fontWeight: 'bold', fontSize: '16px' }}>
-          {loading ? 'Publishing...' : 'Add Project'}
+          {loading ? 'Processing & Uploading Images...' : 'Add Project'}
         </button>
       </form>
 
@@ -363,7 +375,6 @@ const AdminProjects = () => {
                   <td>
                     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                       {techList.map((tech, i) => {
-                        // Extraction sécurisée du nom textuel
                         const techName = typeof tech === 'object' && tech !== null 
                           ? (tech.name || tech.iconName || '') 
                           : String(tech);

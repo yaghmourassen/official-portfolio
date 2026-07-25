@@ -54,30 +54,26 @@ const getProjectById = async (req, res) => {
 };
 
 // Create project
+// Create project
 const createProject = async (req, res) => {
     try {
         const projectData = { ...req.body };
 
-        // Normalisation JSON pour technologies
-        if (projectData.technologies && typeof projectData.technologies !== 'string') {
+        // Technologies
+        if (
+            projectData.technologies &&
+            typeof projectData.technologies !== "string"
+        ) {
             projectData.technologies = JSON.stringify(projectData.technologies);
         }
 
-        // 1. Image principale (req.files.image)
-        if (req.files && req.files.image && req.files.image[0]) {
-            projectData.image_url = `/uploads/${req.files.image[0].filename}`;
-        } else if (req.file) { // Fallback si toujours configuré avec single('image')
-            projectData.image_url = `/uploads/${req.file.filename}`;
-        } else {
-            projectData.image_url = null;
-        }
+        // Image principale Cloudinary
+        projectData.image_url = projectData.image || null;
 
-        // 2. Galerie d'images secondaires (req.files.images ou req.files.gallery)
-        const galleryFiles = req.files && (req.files.images || req.files.gallery);
-        if (galleryFiles && galleryFiles.length > 0) {
-            const galleryUrls = galleryFiles.map((file) => `/uploads/${file.filename}`);
-            projectData.images = JSON.stringify(galleryUrls);
-        } else {
+        // Galerie Cloudinary
+        if (Array.isArray(projectData.images)) {
+            projectData.images = JSON.stringify(projectData.images);
+        } else if (!projectData.images) {
             projectData.images = JSON.stringify([]);
         }
 
@@ -88,16 +84,7 @@ const createProject = async (req, res) => {
             project,
         });
     } catch (error) {
-        console.log("❌ CRITICAL DATABASE ERROR ON CREATE:", error);
-
-        // Nettoyage des fichiers fraîchement envoyés en cas d'erreur BDD
-        if (req.files) {
-            if (req.files.image) deleteLocalFile(req.files.image[0].filename);
-            const galleryFiles = req.files.images || req.files.gallery;
-            if (galleryFiles) galleryFiles.forEach((f) => deleteLocalFile(f.filename));
-        } else if (req.file) {
-            deleteLocalFile(req.file.filename);
-        }
+        console.error("❌ CRITICAL DATABASE ERROR ON CREATE:", error);
 
         res.status(500).json({
             message: "Failed to create project.",
