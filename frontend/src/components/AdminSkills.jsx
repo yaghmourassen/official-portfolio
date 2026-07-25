@@ -3,26 +3,31 @@ import { getSkills, addSkill, deleteSkill } from '../services/skills';
 
 const ALLOWED_CATEGORIES = [
     'Programming Languages',
+    'Databases',
     'Frameworks',
     'Libraries',
     'DevOps',
-    'Securities'
+    'Networking and Securities'
 ];
 
-// 1. Primary Mapping for essential skills, JWT, and Network/Security concepts
+// Reliable CDN mappings for web standards, languages, security, and networking
 const FEATURED_ICON_MAP = {
-    // Core Languages & Web
+    // Web Core (Handles variations of HTML & CSS)
+    'html': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+    'html5': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+    'css': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+    'css3': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+    'javascript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+    'js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
     'java': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
-    'html': 'https://api.iconify.design/logos/html-5.svg',
-    'html5': 'https://api.iconify.design/logos/html-5.svg',
-    'css': 'https://api.iconify.design/logos/css-3.svg',
-    'javascript': 'https://api.iconify.design/logos/javascript.svg',
-    'php': 'https://api.iconify.design/logos/php.svg',
-    'python': 'https://api.iconify.design/logos/python.svg',
+    'php': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg',
+    'python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+    'sql': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+    'nosql': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
 
-    // Security, Authentication & Networking Concepts
-    'jwt': 'https://api.iconify.design/logos/jwt-icon.svg',
-    'jsonwebtoken': 'https://api.iconify.design/logos/jwt-icon.svg',
+    // Security, Auth & Networking Concepts
+    'jwt': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/json/json-original.svg',
+    'jsonwebtoken': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/json/json-original.svg',
     'firewall': 'https://api.iconify.design/fa6-solid/shield-halved.svg',
     'firewalls': 'https://api.iconify.design/fa6-solid/shield-halved.svg',
     'acl': 'https://api.iconify.design/fa6-solid/user-lock.svg',
@@ -32,12 +37,12 @@ const FEATURED_ICON_MAP = {
     'packettracer': 'https://api.iconify.design/logos/cisco.svg',
     'ids': 'https://api.iconify.design/fa6-solid/shield-cat.svg',
     'ips': 'https://api.iconify.design/fa6-solid/shield-cat.svg',
-    'wireshark': 'https://api.iconify.design/logos/wireshark.svg',
-    'kali': 'https://api.iconify.design/logos/kali-linux.svg',
-    'kalilinux': 'https://api.iconify.design/logos/kali-linux.svg'
+    'wireshark': 'https://cdn.simpleicons.org/wireshark',
+    'kali': 'https://cdn.simpleicons.org/kalilinux',
+    'kalilinux': 'https://cdn.simpleicons.org/kalilinux'
 };
 
-// Generates unique HSL colors per skill string to give secondary fallback badges distinct designs
+// Generates unique HSL colors per skill string for dynamic fallback badges
 const getUniqueBadgeStyle = (str = '') => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -61,12 +66,6 @@ const getShortLabel = (text) => {
     return cleanText.slice(0, 3).toUpperCase();
 };
 
-/**
- * Dynamic Skill Icon Component
- * 1. Checks FEATURED_ICON_MAP (Java, JWT, Firewalls, ACL, VLAN, VPN...).
- * 2. Attempts CDN fetch from SimpleIcons.
- * 3. Falls back to a dynamic text badge with a unique color scheme per skill.
- */
 const SkillIcon = ({ iconName, title, size = 26 }) => {
     const [hasError, setHasError] = useState(false);
 
@@ -74,9 +73,17 @@ const SkillIcon = ({ iconName, title, size = 26 }) => {
         setHasError(false);
     }, [iconName, title]);
 
-    const slug = (iconName || title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const rawSlug = (iconName || title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
-    // Fallback: Distinctly styled badge with unique background/text colors
+    // Map common aliases to SimpleIcons standard endpoints
+    const SLUG_ALIASES = {
+        'html': 'html5',
+        'css': 'css3',
+        'js': 'javascript'
+    };
+
+    const slug = SLUG_ALIASES[rawSlug] || rawSlug;
+
     if (hasError || !slug) {
         const label = getShortLabel(title || iconName);
         const style = getUniqueBadgeStyle(title || iconName);
@@ -104,8 +111,7 @@ const SkillIcon = ({ iconName, title, size = 26 }) => {
         );
     }
 
-    // Determine target URL
-    const targetUrl = FEATURED_ICON_MAP[slug] || `https://cdn.simpleicons.org/${slug}`;
+    const targetUrl = FEATURED_ICON_MAP[rawSlug] || FEATURED_ICON_MAP[slug] || `https://cdn.simpleicons.org/${slug}`;
 
     return (
         <img
@@ -143,7 +149,12 @@ function AdminSkills() {
 
     const handleTitleChange = (e) => {
         const val = e.target.value;
-        const generatedSlug = val.toLowerCase().replace(/[\s\.\-]+/g, '');
+        let generatedSlug = val.toLowerCase().replace(/[\s\.\-]+/g, '');
+        
+        // Auto-fix common HTML/CSS title inputs to full icon slugs
+        if (generatedSlug === 'html') generatedSlug = 'html5';
+        if (generatedSlug === 'css') generatedSlug = 'css3';
+
         setFormData({
             ...formData,
             title: val,
@@ -203,7 +214,7 @@ function AdminSkills() {
                 <label style={{ fontWeight: 'bold' }}>Skill Title</label>
                 <input
                     type="text"
-                    placeholder="e.g. JWT, Java, Firewalls, ACL, VLAN, VPN"
+                    placeholder="e.g. HTML, CSS, JavaScript, Java, JWT"
                     value={formData.title}
                     onChange={handleTitleChange}
                     required
@@ -213,7 +224,7 @@ function AdminSkills() {
                 <label style={{ fontWeight: 'bold' }}>Icon Slug (Auto-generated or custom)</label>
                 <input
                     type="text"
-                    placeholder="e.g. jwt, java, firewall, acl, vlan, vpn"
+                    placeholder="e.g. html5, css3, javascript, java"
                     value={formData.iconName}
                     onChange={(e) => setFormData({ ...formData, iconName: e.target.value.toLowerCase() })}
                     required

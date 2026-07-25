@@ -23,7 +23,7 @@ const DynamicIcon = ({ name, title }) => {
         const resolveIcon = async () => {
             const cleanSlug = searchQuery.replace(/[^a-z0-9]/g, "");
 
-            // 1. Check Devicon first (Best for languages like Java, C++, Python, MySQL)
+            // 1. Check Devicon first
             const deviconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${cleanSlug}/${cleanSlug}-original.svg`;
             try {
                 const devRes = await fetch(deviconUrl, { method: "HEAD" });
@@ -33,10 +33,10 @@ const DynamicIcon = ({ name, title }) => {
                     return;
                 }
             } catch (err) {
-                // Continue to next provider on failure
+                // Continue on failure
             }
 
-            // 2. Query Iconify Search API (Covers 150k+ icons: Cisco, JWT, Firewalls, IDS, etc.)
+            // 2. Query Iconify Search API
             try {
                 const searchRes = await fetch(
                     `https://api.iconify.design/search?query=${encodeURIComponent(searchQuery)}&limit=1`
@@ -66,7 +66,6 @@ const DynamicIcon = ({ name, title }) => {
     if (loading) return <div className="icon-skeleton"></div>;
 
     if (!iconUrl) {
-        // Fallback badge if no icon matches the input
         const fallbackChar = (title || name || "?").charAt(0).toUpperCase();
         return <div className="dynamic-badge">{fallbackChar}</div>;
     }
@@ -79,6 +78,15 @@ const DynamicIcon = ({ name, title }) => {
         />
     );
 };
+
+// Define explicit display order for your categories
+const CATEGORY_ORDER = [
+    "Programming Languages",
+    "Databases", // Placed directly under Programming Languages
+    "Frameworks & Libraries",
+    "Tools & Platforms",
+    "Other"
+];
 
 function Skills() {
     const [skillCategories, setSkillCategories] = useState([]);
@@ -103,10 +111,25 @@ function Skills() {
                 return acc;
             }, {});
 
-            const categoriesArray = Object.keys(grouped).map((categoryTitle) => ({
-                categoryTitle,
-                skills: grouped[categoryTitle]
-            }));
+            // Convert to array and apply custom category sorting
+            const categoriesArray = Object.keys(grouped)
+                .map((categoryTitle) => ({
+                    categoryTitle,
+                    skills: grouped[categoryTitle]
+                }))
+                .sort((a, b) => {
+                    const indexA = CATEGORY_ORDER.findIndex(
+                        (cat) => cat.toLowerCase() === a.categoryTitle.toLowerCase()
+                    );
+                    const indexB = CATEGORY_ORDER.findIndex(
+                        (cat) => cat.toLowerCase() === b.categoryTitle.toLowerCase()
+                    );
+
+                    const orderA = indexA !== -1 ? indexA : 999;
+                    const orderB = indexB !== -1 ? indexB : 999;
+
+                    return orderA - orderB;
+                });
 
             setSkillCategories(categoriesArray);
         } catch (error) {

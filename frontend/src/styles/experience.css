@@ -1,97 +1,314 @@
 /* frontend/src/styles/experience.css */
 
 .experience {
-    padding: 100px 8%;
-    background: #ffffff;
+    padding: 5rem 1.5rem;
+    position: relative;
 }
 
 .experience-container {
-    max-width: 1000px;
-    margin: auto;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
+.section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.section-subtitle {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #2563eb; /* Primary Accent (Blue) */
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* Dark mode adjustment */
+@media (prefers-color-scheme: dark) {
+    .section-title {
+        color: #f8fafc;
+    }
+}
+
+/* Timeline Container */
 .timeline {
     position: relative;
-    margin-top: 60px;
-    padding-left: 35px;
-    border-left: 3px solid #2563eb;
+    padding-left: 2rem;
+    border-left: 2px solid #e2e8f0;
 }
 
+@media (prefers-color-scheme: dark) {
+    .timeline {
+        border-left-color: #334155;
+    }
+}
+
+/* Timeline Item */
 .timeline-item {
     position: relative;
-    margin-bottom: 50px;
+    margin-bottom: 2.5rem;
 }
 
-/* حركة ذكية: إخفاء الهامش السفلي للخبرة الأخيرة */
 .timeline-item:last-child {
     margin-bottom: 0;
 }
 
+/* Timeline Node / Dot */
 .timeline-dot {
     position: absolute;
-    left: -46px;
-    top: 8px;
-    width: 18px;
-    height: 18px;
-    background: #2563eb;
+    left: -2rem;
+    top: 0;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    background: #2563eb; /* Primary Accent (Blue) */
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    z-index: 2;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
+.timeline-item:hover .timeline-dot {
+    transform: translateX(-50%) scale(1.15);
+    background: #1d4ed8;
+}
+
+.dot-icon {
+    font-size: 0.875rem;
+}
+
+/* Card Content */
 .timeline-content {
-    background: #f8fafc;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, .06);
-    /* إضافة تأثير حركة ناعم عند ظهور الكروت */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* تأثير تحويم ناعم لزيادة التفاعل */
-.timeline-content:hover {
+.timeline-item:hover .timeline-content {
     transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(37, 99, 235, 0.08);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
 }
 
-.timeline-date {
-    color: #2563eb;
+@media (prefers-color-scheme: dark) {
+    .timeline-content {
+        background: #1e293b;
+        border-color: #334155;
+    }
+    .timeline-item:hover .timeline-content {
+        border-color: #475569;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Card Header Structure */
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .timeline-header {
+        border-bottom-color: #334155;
+    }
+}
+
+.role-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.25rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .role-title {
+        color: #f8fafc;
+    }
+}
+
+.company-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.938rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.company-name {
+    color: #2563eb; /* Primary Accent (Blue) */
     font-weight: 600;
 }
 
-.timeline-content h3 {
-    margin: 10px 0;
-    color: #111827;
+.location-tag {
+    font-size: 0.85rem;
+    color: #94a3b8;
 }
 
-.timeline-content h4 {
-    color: #666;
-    margin-bottom: 15px;
+.timeline-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.35rem 0.75rem;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 20px;
+    font-size: 0.813rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
-.timeline-content p {
-    color: #555;
-    line-height: 1.8;
+@media (prefers-color-scheme: dark) {
+    .timeline-date-badge {
+        background: #0f172a;
+        color: #cbd5e1;
+    }
 }
 
-/* تنسيق إضافي لنص التحميل أو رسالة مصفوفة فارغة ليظهر بشكل لائق */
-.loading-text, .no-data-text {
+/* Description & Highlights */
+.timeline-description {
+    color: #475569;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.timeline-highlights {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.timeline-highlights li {
+    margin-bottom: 0.375rem;
+}
+
+.timeline-highlights li::marker {
+    color: #2563eb; /* Bullet color */
+}
+
+@media (prefers-color-scheme: dark) {
+    .timeline-description,
+    .timeline-highlights {
+        color: #94a3b8;
+    }
+}
+
+/* Tech Stack Badges */
+.timeline-tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.tech-badge {
+    padding: 0.25rem 0.625rem;
+    background: rgba(37, 99, 235, 0.08);
+    color: #1d4ed8;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 6px;
+    font-size: 0.775rem;
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tech-badge {
+        background: rgba(37, 99, 235, 0.15);
+        color: #60a5fa;
+        border-color: rgba(37, 99, 235, 0.3);
+    }
+}
+
+/* Empty State */
+.empty-state {
     text-align: center;
-    padding: 40px;
-    color: #2563eb;
-    font-weight: 600;
-    font-size: 1.1rem;
+    padding: 3rem 1rem;
+    color: #94a3b8;
 }
 
-/* التجاوب مع الشاشات الصغيرة (Responsive) */
-@media(max-width: 768px) {
+.empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
+/* Skeleton Loading Animation */
+.skeleton-dot {
+    background: #cbd5e1 !important;
+    box-shadow: none !important;
+}
+
+.skeleton-card {
+    pointer-events: none;
+}
+
+.skeleton-line {
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@media (prefers-color-scheme: dark) {
+    .skeleton-line {
+        background: #334155;
+    }
+    .skeleton-dot {
+        background: #334155 !important;
+    }
+}
+
+.skeleton-line.short { width: 25%; }
+.skeleton-line.title { width: 50%; height: 18px; }
+.skeleton-line.medium { width: 75%; }
+.skeleton-line.long { width: 90%; }
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
     .timeline {
-        padding-left: 20px;
+        padding-left: 1.5rem;
     }
-
     .timeline-dot {
-        left: -31px;
+        left: -1.5rem;
+        width: 30px;
+        height: 30px;
     }
-
-    .experience {
-        padding: 70px 20px;
+    .dot-icon {
+        font-size: 0.75rem;
+    }
+    .timeline-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
