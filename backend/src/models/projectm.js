@@ -1,4 +1,3 @@
-// src/models/projectm.js
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
@@ -29,10 +28,17 @@ const Project = sequelize.define(
             allowNull: false,
         },
 
-        // Renommé pour être raccord avec notre contrôleur (image_url)
+        // Image principale (Couverture / Façade)
         image_url: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+
+        // 🌟 NOUVEAU CHAMP : Galerie d'images secondaires (tableau JSON d'URLs)
+        images: {
+            type: DataTypes.JSON,
+            allowNull: true,
+            defaultValue: [],
         },
 
         category: {
@@ -41,27 +47,35 @@ const Project = sequelize.define(
             defaultValue: "Full-Stack",
         },
 
-        // Stockage du tableau des technos au format JSON (converti automatiquement par Sequelize en chaîne sous SQLite)
+        // Tableau des technologies au format JSON
         technologies: {
             type: DataTypes.JSON, 
             allowNull: true,
+            defaultValue: [],
         },
 
         github_url: {
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                // On retire ou assouplit isUrl si tu veux accepter des champs vides sans bugger
-                isUrl: { msg: "Le lien GitHub doit être une URL valide." },
+                // On autorise la valeur vide (null ou "") sans échouer à la validation
+                isUrlOrEmpty(value) {
+                    if (value && value.trim() !== "" && !/^https?:\/\//.test(value)) {
+                        throw new Error("Le lien GitHub doit être une URL valide.");
+                    }
+                },
             },
         },
 
-        // Remplacé demo_url par live_url pour matcher le frontend qu'on a prévu
         live_url: {
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isUrl: { msg: "Le lien Live doit être une URL valide." },
+                isUrlOrEmpty(value) {
+                    if (value && value.trim() !== "" && !/^https?:\/\//.test(value)) {
+                        throw new Error("Le lien Live doit être une URL valide.");
+                    }
+                },
             },
         },
     },

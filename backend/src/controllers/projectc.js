@@ -1,23 +1,26 @@
-// src/controllers/projectc.js
 const projectService = require("../services/projects");
 const fs = require("fs");
 const path = require("path");
 
-// دالة مساعدة محدثة وآمنة لحذف الملف محلياً إذا كان موجوداً فقط
+// Fonction auxiliaire pour supprimer un fichier localement en toute sécurité
 const deleteLocalFile = (filePath) => {
     if (filePath) {
-        // حل المسار المطلق للملف داخل المجلد assets/uploads
         const absolutePath = path.join(__dirname, "../assets/uploads", path.basename(filePath));
         
-        // الفحص الذكي: نتحقق أولاً هل الملف موجود على القرص؟
         if (fs.existsSync(absolutePath)) {
             fs.unlink(absolutePath, (err) => {
                 if (err) console.error(`Impossible de supprimer le fichier: ${absolutePath}`, err);
             });
         } else {
-            // إذا لم يتم العثور على الصورة، نتخطى الحذف بأمان دون إطلاق أي خطأ خطير
             console.log(`ℹ️ [Safe Bypass] Le fichier n'existe pas sur le disque, suppression ignorée: ${absolutePath}`);
         }
+    }
+};
+
+// Fonction auxiliaire pour supprimer un tableau de fichiers
+const deleteLocalFiles = (filePaths) => {
+    if (Array.isArray(filePaths)) {
+        filePaths.forEach((fp) => deleteLocalFile(fp));
     }
 };
 
@@ -55,16 +58,27 @@ const createProject = async (req, res) => {
     try {
         const projectData = { ...req.body };
 
-        if (projectData.technologies) {
-            if (typeof projectData.technologies !== 'string') {
-                projectData.technologies = JSON.stringify(projectData.technologies);
-            }
+        // Normalisation JSON pour technologies
+        if (projectData.technologies && typeof projectData.technologies !== 'string') {
+            projectData.technologies = JSON.stringify(projectData.technologies);
         }
 
-        if (req.file) {
+        // 1. Image principale (req.files.image)
+        if (req.files && req.files.image && req.files.image[0]) {
+            projectData.image_url = `/uploads/${req.files.image[0].filename}`;
+        } else if (req.file) { // Fallback si toujours configuré avec single('image')
             projectData.image_url = `/uploads/${req.file.filename}`;
         } else {
             projectData.image_url = null;
+        }
+
+        // 2. Galerie d'images secondaires (req.files.images ou req.files.gallery)
+        const galleryFiles = req.files && (req.files.images || req.files.gallery);
+        if (galleryFiles && galleryFiles.length > 0) {
+            const galleryUrls = galleryFiles.map((file) => `/uploads/${file.filename}`);
+            projectData.images = JSON.stringify(galleryUrls);
+        } else {
+            projectData.images = JSON.stringify([]);
         }
 
         const project = await projectService.createProject(projectData);
@@ -74,8 +88,16 @@ const createProject = async (req, res) => {
             project,
         });
     } catch (error) {
-        console.log("❌ CRITICAL DATABASE ERROR:", error);
-        if (req.file) deleteLocalFile(req.file.filename);
+        console.log("❌ CRITICAL DATABASE ERROR ON CREATE:", error);
+
+        // Nettoyage des fichiers fraîchement envoyés en cas d'erreur BDD
+        if (req.files) {
+            if (req.files.image) deleteLocalFile(req.files.image[0].filename);
+            const galleryFiles = req.files.images || req.files.gallery;
+            if (galleryFiles) galleryFiles.forEach((f) => deleteLocalFile(f.filename));
+        } else if (req.file) {
+            deleteLocalFile(req.file.filename);
+        }
 
         res.status(500).json({
             message: "Failed to create project.",
@@ -90,22 +112,49 @@ const updateProject = async (req, res) => {
         const projectId = req.params.id;
         const projectData = { ...req.body };
 
-        if (projectData.technologies) {
-            if (typeof projectData.technologies !== 'string') {
-                projectData.technologies = JSON.stringify(projectData.technologies);
-            }
+        if (projectData.technologies && typeof projectData.technologies !== 'string') {
+            projectData.technologies = JSON.stringify(projectData.technologies);
         }
 
         const existingProject = await projectService.getProjectById(projectId);
         if (!existingProject) {
-            if (req.file) deleteLocalFile(req.file.filename);
+            // Supprimer les nouveaux fichiers téléversés si le projet n'existe pas
+            if (req.files) {
+                if (req.files.image) deleteLocalFile(req.files.image[0].filename);
+                const galleryFiles = req.files.images || req.files.gallery;
+                if (galleryFiles) galleryFiles.forEach((f) => deleteLocalFile(f.filename));
+            } else if (req.file) {
+                deleteLocalFile(req.file.filename);
+            }
             return res.status(404).json({ message: "Project not found." });
         }
 
-        if (req.file) {
+        // 1. Mise à jour de l'image principale si un nouveau fichier est fourni
+        if (req.files && req.files.image && req.files.image[0]) {
+            projectData.image_url = `/uploads/${req.files.image[0].filename}`;
+            if (existingProject.image_url) {
+                deleteLocalFile(existingProject.image_url);
+            }
+        } else if (req.file) {
             projectData.image_url = `/uploads/${req.file.filename}`;
             if (existingProject.image_url) {
                 deleteLocalFile(existingProject.image_url);
+            }
+        }
+
+        // 2. Mise à jour de la galerie si de nouvelles images sont fournies
+        const galleryFiles = req.files && (req.files.images || req.files.gallery);
+        if (galleryFiles && galleryFiles.length > 0) {
+            const newGalleryUrls = galleryFiles.map((file) => `/uploads/${file.filename}`);
+            projectData.images = JSON.stringify(newGalleryUrls);
+
+            // Optionnel : supprimer l'ancienne galerie
+            let oldImages = existingProject.images;
+            if (typeof oldImages === "string") {
+                try { oldImages = JSON.parse(oldImages); } catch (e) { oldImages = []; }
+            }
+            if (Array.isArray(oldImages)) {
+                deleteLocalFiles(oldImages);
             }
         }
 
@@ -117,7 +166,14 @@ const updateProject = async (req, res) => {
         });
     } catch (error) {
         console.log("❌ CRITICAL DATABASE ERROR ON UPDATE:", error);
-        if (req.file) deleteLocalFile(req.file.filename);
+
+        if (req.files) {
+            if (req.files.image) deleteLocalFile(req.files.image[0].filename);
+            const galleryFiles = req.files.images || req.files.gallery;
+            if (galleryFiles) galleryFiles.forEach((f) => deleteLocalFile(f.filename));
+        } else if (req.file) {
+            deleteLocalFile(req.file.filename);
+        }
 
         res.status(500).json({
             message: "Failed to update project.",
@@ -141,12 +197,22 @@ const deleteProject = async (req, res) => {
             return res.status(404).json({ message: "Project not found." });
         }
 
+        // Suppression de l'image principale
         if (project.image_url) {
             deleteLocalFile(project.image_url);
         }
 
+        // Suppression des images de la galerie
+        let galleryImages = project.images;
+        if (typeof galleryImages === "string") {
+            try { galleryImages = JSON.parse(galleryImages); } catch (e) { galleryImages = []; }
+        }
+        if (Array.isArray(galleryImages)) {
+            deleteLocalFiles(galleryImages);
+        }
+
         res.status(200).json({
-            message: "Project and associated image deleted successfully.",
+            message: "Project and all associated images deleted successfully.",
         });
     } catch (error) {
         res.status(500).json({

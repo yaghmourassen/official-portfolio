@@ -1,10 +1,9 @@
-// src/services/projects.js
 const Project = require("../models/projectm");
 
 // Get all projects
 const getAllProjects = async () => {
     return await Project.findAll({
-        // Trie par défaut du plus récent au plus ancien
+        // Tri par défaut du plus récent au plus ancien
         order: [["created_at", "DESC"]],
     });
 };
@@ -14,19 +13,31 @@ const getProjectById = async (id) => {
     return await Project.findByPk(id);
 };
 
-// Create project
-const createProject = async (projectData) => {
-    // Si technologies arrive sous forme de chaîne de caractères depuis un `FormData` (multipart),
-    // on s'assure de le parser en tableau d'objets/chaînes avant de le passer à Sequelize.
-    if (typeof projectData.technologies === 'string') {
+// Fonction utilitaire pour parser les champs JSON reçus depuis FormData (multipart)
+const parseJsonField = (fieldValue) => {
+    if (typeof fieldValue === 'string') {
         try {
-            projectData.technologies = JSON.parse(projectData.technologies);
+            return JSON.parse(fieldValue);
         } catch (e) {
-            // Si ce n'est pas du JSON valide (ex: juste une chaîne séparée par des virgules),
-            // on crée un tableau nettoyé.
-            projectData.technologies = projectData.technologies.split(',').map(t => t.trim());
+            // Si ce n'est pas du JSON valide, on sépare par des virgules (fallback)
+            return fieldValue.split(',').map(item => item.trim()).filter(Boolean);
         }
     }
+    return fieldValue;
+};
+
+// Create project
+const createProject = async (projectData) => {
+    // Parsing sécurisé de technologies
+    if (projectData.technologies) {
+        projectData.technologies = parseJsonField(projectData.technologies);
+    }
+
+    // Parsing sécurisé du tableau d'images (galerie)
+    if (projectData.images) {
+        projectData.images = parseJsonField(projectData.images);
+    }
+
     return await Project.create(projectData);
 };
 
@@ -38,13 +49,14 @@ const updateProject = async (id, projectData) => {
         return null;
     }
 
-    // Même traitement de sécurité pour les technologies lors d'une mise à jour
-    if (typeof projectData.technologies === 'string') {
-        try {
-            projectData.technologies = JSON.parse(projectData.technologies);
-        } catch (e) {
-            projectData.technologies = projectData.technologies.split(',').map(t => t.trim());
-        }
+    // Parsing sécurisé de technologies lors d'une mise à jour
+    if (projectData.technologies) {
+        projectData.technologies = parseJsonField(projectData.technologies);
+    }
+
+    // Parsing sécurisé des images de la galerie lors d'une mise à jour
+    if (projectData.images) {
+        projectData.images = parseJsonField(projectData.images);
     }
 
     await project.update(projectData);
