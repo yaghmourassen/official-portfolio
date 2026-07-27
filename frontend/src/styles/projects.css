@@ -1,78 +1,80 @@
-/* ===============================
-   PROJECTS SECTION - THEME DARK SLATE & CYAN
-================================ */
+/* ==========================================
+   PROJECTS SECTION - DARK SLATE & CYAN GLOW
+========================================== */
 .projects-section {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     color: #ffffff;
-    padding: 70px 0;
-    min-height: 80vh;
+    padding: 80px 0;
+    min-height: 100vh;
 }
 
 .projects-container {
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
-/* ===============================
-   Header & Badge
-================================ */
+/* Header & Title */
 .projects-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
 .projects-badge {
     display: inline-block;
-    padding: 8px 20px;
+    padding: 6px 18px;
     border-radius: 50px;
     background: rgba(56, 189, 248, 0.1);
-    color: #38bdf8;
-    margin-bottom: 15px;
+    color: #38bdf8 !important;
     font-weight: 600;
-    font-size: 0.9rem;
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    margin-bottom: 12px;
 }
 
-.section-title {
+.projects-section .section-title {
     font-size: 3rem;
     font-weight: 800;
-    margin-bottom: 15px;
-    color: #ffffff;
+    margin-bottom: 12px;
+    color: #ffffff !important;
+    display: block;
 }
 
-.section-title span {
-    color: #38bdf8;
-}
-
-.section-subtitle {
+.projects-section .section-subtitle {
     font-size: 1.1rem;
-    color: #cbd5e1;
-    max-width: 600px;
+    color: #94a3b8;
+    max-width: 620px;
     margin: 0 auto;
 }
 
-/* ===============================
-   Filtres (Pills)
-================================ */
+/* Category Filter Pills (Text + Icons) */
 .filter-wrapper {
     display: flex;
     justify-content: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin-top: 30px;
+    margin-top: 32px;
 }
 
 .filter-pill {
-    padding: 10px 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
     border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(30, 41, 59, 0.6);
+    background: rgba(30, 41, 59, 0.7);
     color: #94a3b8;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+.filter-pill .cat-icon {
+    font-size: 1rem;
 }
 
 .filter-pill:hover,
@@ -80,20 +82,21 @@
     background: #38bdf8;
     color: #0f172a;
     border-color: #38bdf8;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
 }
 
-/* ===============================
-   Bento Showcase Grid
-================================ */
-.bento-grid {
+/* ==========================================
+   MODERN PROJECTS GRID
+========================================== */
+.modern-projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 25px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
 }
 
-.bento-card {
+.modern-card {
     background: #1e293b;
     border: 1px solid rgba(56, 189, 248, 0.15);
     border-radius: 20px;
@@ -101,40 +104,40 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    transition: all 0.4s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
-.bento-card:hover {
-    transform: translateY(-10px);
+.modern-card:hover {
+    transform: translateY(-8px);
     border-color: #38bdf8;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(56, 189, 248, 0.2);
 }
 
-/* Media Area */
-.bento-media {
+/* Media Card Styling */
+.card-media {
     position: relative;
-    height: 210px;
+    height: 220px;
     overflow: hidden;
     background: #0f172a;
 }
 
-.bento-img {
+.card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.bento-card:hover .bento-img {
-    transform: scale(1.05);
+.modern-card:hover .card-img {
+    transform: scale(1.06);
 }
 
-.bento-overlay {
+.card-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(4px);
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(3px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -142,125 +145,159 @@
     transition: opacity 0.3s ease;
 }
 
-.bento-card:hover .bento-overlay {
+.modern-card:hover .card-overlay {
     opacity: 1;
 }
 
-.action-hint {
+.view-case-btn {
     color: #0f172a;
     font-weight: 700;
     font-size: 0.9rem;
-    padding: 10px 20px;
+    padding: 10px 22px;
     background: #38bdf8;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    border-radius: 30px;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
 }
 
-.category-tag {
+.category-tag-pill {
     position: absolute;
     top: 15px;
     left: 15px;
-    padding: 5px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
     background: rgba(15, 23, 42, 0.85);
     border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 50px;
-    font-size: 0.75rem;
+    border-radius: 30px;
+    font-size: 0.78rem;
     font-weight: 600;
     color: #38bdf8;
 }
 
-/* Card Content */
-.bento-content {
-    padding: 22px;
+/* Card Body & Icon-Only Tech Stack */
+.card-body {
+    padding: 24px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     flex-grow: 1;
 }
 
-.bento-title {
+.card-title {
     font-size: 1.35rem;
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 4px;
 }
 
-.bento-subtitle {
+.card-subtitle {
     font-size: 0.85rem;
     color: #38bdf8;
     margin-bottom: 12px;
     font-weight: 600;
 }
 
-.bento-description {
-    color: #94a3b8;
-    font-size: 0.95rem;
+.card-description {
+    color: #cbd5e1;
+    font-size: 0.92rem;
     line-height: 1.6;
     margin-bottom: 20px;
-    flex-grow: 1;
 }
 
-/* Tech Chips */
-.tech-chips {
+.icon-tech-stack {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.tech-chip {
-    font-size: 0.78rem;
-    padding: 5px 12px;
+.tech-icon-only-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
     border-radius: 8px;
-    background: rgba(56, 189, 248, 0.08);
-    color: #cbd5e1;
-    border: 1px solid rgba(56, 189, 248, 0.15);
-    font-weight: 500;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    transition: all 0.2s ease;
 }
 
-.tech-chip.more {
+.tech-icon-only-wrapper:hover {
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+    background: rgba(56, 189, 248, 0.1);
+}
+
+.tech-more-badge {
+    font-size: 0.75rem;
     color: #38bdf8;
-    border-color: rgba(56, 189, 248, 0.3);
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.1);
 }
 
-/* ===============================
-   Modal Immersive (Case Study)
-================================ */
+/* Fallback Icon Style */
+.icon-fallback {
+    border-radius: 4px;
+    background-color: #334155;
+    color: #38bdf8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* ==========================================
+   FIXED CASE STUDY MODAL UI/UX
+========================================== */
 .modal-backdrop {
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
+    backdrop-filter: blur(10px);
+    z-index: 99999 !important; /* Higher than header/navbar z-index */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
 }
 
-.modal-container {
+.modal-container-expanded {
     background: #1e293b;
-    border: 2px solid #38bdf8;
-    border-radius: 25px;
-    max-width: 950px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px;
+    max-width: 1100px;
+    width: 95vw;
+    max-height: 85vh;
     position: relative;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(56, 189, 248, 0.2);
+    overflow: hidden; /* Prevents outer box overflow */
 }
 
+/* Pinned Close Button Top-Right */
 .modal-close-btn {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    top: 16px;
+    right: 16px;
+    background: #0f172a;
+    border: 1px solid rgba(56, 189, 248, 0.4);
     color: #ffffff;
     width: 38px;
     height: 38px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 10;
+    z-index: 50;
     font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s ease;
 }
 
@@ -269,141 +306,201 @@
     color: #0f172a;
 }
 
-.modal-body {
+/* 2-Column Modal Grid */
+.modal-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    padding: 30px;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 32px;
+    padding: 32px;
+    max-height: 85vh;
+    box-sizing: border-box;
 }
 
-/* Modal Gallery */
-.main-image-frame {
-    height: 280px;
-    border-radius: 18px;
+/* Left Column: Fixed Gallery Frame */
+.modal-gallery-zone {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Critical: Stops grid items from exceeding width */
+}
+
+.modal-hero-frame {
+    width: 100%;
+    height: 380px;
+    border-radius: 14px;
     overflow: hidden;
     background: #0f172a;
     border: 1px solid rgba(56, 189, 248, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.main-gallery-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* Full image scaling without distortion or stretch */
+.modal-hero-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
-.gallery-thumbnails {
+.modal-thumbnails-strip {
     display: flex;
     gap: 10px;
     margin-top: 12px;
     overflow-x: auto;
+    padding-bottom: 6px;
 }
 
-.thumb-btn {
+.modal-thumb-item {
     width: 65px;
     height: 65px;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
     border: 2px solid transparent;
     cursor: pointer;
     padding: 0;
     background: #0f172a;
-    opacity: 0.5;
+    opacity: 0.6;
+    flex-shrink: 0;
     transition: all 0.2s ease;
 }
 
-.thumb-btn.active {
+.modal-thumb-item.active,
+.modal-thumb-item:hover {
     border-color: #38bdf8;
     opacity: 1;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
-.thumb-btn img {
+.modal-thumb-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Modal Content Details */
-.modal-title {
+/* Right Column: Independent Scrollable Text Block */
+.modal-info-zone {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents inline text overflow */
+    overflow-y: auto;
+    padding-right: 12px;
+    max-height: calc(85vh - 64px);
+}
+
+.modal-info-zone::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-info-zone::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.3);
+    border-radius: 4px;
+}
+
+.modal-main-title {
     font-size: 2rem;
     font-weight: 800;
     color: #ffffff;
     margin-top: 8px;
+    line-height: 1.25;
 }
 
-.modal-subtitle {
+.modal-sub-title {
     color: #38bdf8;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
+    margin-top: 4px;
 }
 
-.modal-section {
+.modal-text-block {
     margin-top: 20px;
 }
 
-.modal-section h4 {
-    font-size: 0.85rem;
+.modal-section-heading {
+    font-size: 0.8rem;
     text-transform: uppercase;
     color: #94a3b8;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     margin-bottom: 8px;
 }
 
-.modal-description {
+.modal-description-text {
     color: #cbd5e1;
-    line-height: 1.7;
-    font-size: 0.98rem;
+    line-height: 1.65;
+    font-size: 0.95rem;
+    white-space: pre-line;
 }
 
-.modal-actions {
+.modal-tech-grid {
     display: flex;
-    gap: 15px;
-    margin-top: 30px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
-.btn-primary, .btn-secondary {
-    padding: 12px 24px;
+.modal-tech-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    font-size: 0.82rem;
+    color: #ffffff;
+}
+
+.modal-actions-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    padding-bottom: 12px;
+}
+
+.modal-btn {
+    padding: 10px 22px;
     border-radius: 10px;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
 }
 
-.btn-primary {
+.modal-btn-primary {
     background: #38bdf8;
     color: #0f172a;
 }
 
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+.modal-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4);
 }
 
-.btn-secondary {
-    background: rgba(15, 23, 42, 0.6);
+.modal-btn-secondary {
+    background: rgba(15, 23, 42, 0.8);
     color: #ffffff;
     border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
-.btn-secondary:hover {
-    transform: translateY(-3px);
+.modal-btn-secondary:hover {
     border-color: #38bdf8;
     color: #38bdf8;
+    transform: translateY(-2px);
 }
 
-/* ===============================
-   Responsive
-================================ */
+/* Mobile Responsiveness */
 @media (max-width: 850px) {
-    .modal-body {
+    .modal-grid {
         grid-template-columns: 1fr;
+        padding: 20px;
+        overflow-y: auto;
     }
-    .section-title {
-        font-size: 2.2rem;
+    .modal-hero-frame {
+        height: 240px;
+    }
+    .modal-info-zone {
+        max-height: none;
     }
 }

@@ -36,16 +36,21 @@
 }
 
 .section-subtitle {
-    color: #2563eb;
+    display: inline-block; /* Fixes inline layout & margin issues */
+    color: #2563eb !important; /* !important prevents global CSS from turning it white/invisible */
+    font-size: 15px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
+    margin-bottom: 8px;
 }
 
 .section-title {
-    margin: 15px 0 30px;
+    margin: 0 0 30px 0;
     font-size: 42px;
-    color: #111827;
+    font-weight: 700;
+    color: #111827 !important; /* Forces dark color on light background */
+    line-height: 1.2;
 }
 
 .about-text {

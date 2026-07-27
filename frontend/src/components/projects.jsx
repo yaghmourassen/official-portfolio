@@ -2,9 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getProjects } from '../services/projects';
 import '../styles/Projects.css';
 
-// ==========================================
-// 1. MAPPING STATIQUE & HELPER CLEANING
-// ==========================================
+// Tech Icons Mapping
 const STATIC_ICONS = {
   react: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
   reactjs: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
@@ -35,20 +33,26 @@ const STATIC_ICONS = {
   springboot: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg'
 };
 
+const CATEGORY_ICONS = {
+  All: '⚡',
+  Web: '🌐',
+  Mobile: '📱',
+  AI: '🤖',
+  Cybersecurity: '🛡️',
+  Networking: '📡'
+};
+
 const cleanIconKey = (name) => {
   if (!name) return '';
   let str = (typeof name === 'object' ? name.name || name.iconName || '' : name).toString().toLowerCase().trim();
-  
   if (str === 'node.js' || str === 'node') return 'nodejs';
   if (str === 'react.js') return 'react';
   if (str === 'express.js') return 'express';
   if (str === 'vue.js') return 'vuejs';
   if (str === 'next.js') return 'nextjs';
-
   return str.replace(/[^a-z0-9]/g, '');
 };
 
-// Helper safety parser for JSON/Arrays from database
 const safeParseArray = (val) => {
   if (!val) return [];
   if (Array.isArray(val)) return val;
@@ -63,12 +67,9 @@ const safeParseArray = (val) => {
   return [];
 };
 
-// ==========================================
-// 2. COMPOSANT ICONE HYBRIDE
-// ==========================================
-const HybridIcon = ({ name, size = '14px' }) => {
+// Tech Icon Component (Icon-Only Mode)
+const HybridIcon = ({ name, size = '18px' }) => {
   const cleanKey = cleanIconKey(name);
-
   const staticUrl = STATIC_ICONS[cleanKey];
   const dynamicDeviconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${cleanKey}/${cleanKey}-original.svg`;
   const dynamicSimpleIconUrl = `https://cdn.simpleicons.org/${cleanKey}`;
@@ -87,20 +88,7 @@ const HybridIcon = ({ name, size = '14px' }) => {
 
   if (errorStage >= 2) {
     return (
-      <span style={{
-        width: size,
-        height: size,
-        borderRadius: '3px',
-        backgroundColor: '#6b7280',
-        color: '#fff',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '9px',
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        flexShrink: 0
-      }}>
+      <span className="icon-fallback" style={{ width: size, height: size }}>
         {cleanKey.substring(0, 2)}
       </span>
     );
@@ -110,7 +98,8 @@ const HybridIcon = ({ name, size = '14px' }) => {
     <img
       src={src}
       alt={typeof name === 'string' ? name : 'tech'}
-      style={{ width: size, height: size, objectFit: 'contain', flexShrink: 0 }}
+      title={typeof name === 'string' ? name : cleanKey}
+      style={{ width: size, height: size, objectFit: 'contain' }}
       onError={() => {
         if (errorStage === 0) {
           setSrc(dynamicSimpleIconUrl);
@@ -123,9 +112,6 @@ const HybridIcon = ({ name, size = '14px' }) => {
   );
 };
 
-// ==========================================
-// 3. COMPOSANT PRINCIPAL PROJECTS
-// ==========================================
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [activeFilter, setActiveFilter] = useState('All');
@@ -135,45 +121,26 @@ function Projects() {
 
   useEffect(() => {
     let isMounted = true;
-
     const fetchDynamicProjects = async () => {
       try {
         const data = await getProjects();
         let loadedProjects = [];
-        
-        if (Array.isArray(data)) {
-          loadedProjects = data;
-        } else if (data && data.data && Array.isArray(data.data)) {
-          loadedProjects = data.data;
-        }
+        if (Array.isArray(data)) loadedProjects = data;
+        else if (data?.data && Array.isArray(data.data)) loadedProjects = data.data;
 
         const formattedProjects = loadedProjects.map((project) => {
-          // 1. Safe parsing for technologies
           const rawTechs = safeParseArray(project.technologies);
-
-          // 2. Direct extraction of cover image (matching AdminProjects payload: 'image')
           let coverImage = '';
-          if (typeof project.image === 'string' && project.image.trim() !== '') {
-            coverImage = project.image.trim();
-          } else if (project.image && project.image.secure_url) {
-            coverImage = project.image.secure_url;
-          } else if (typeof project.image_url === 'string') {
-            coverImage = project.image_url;
-          }
+          if (typeof project.image === 'string' && project.image.trim() !== '') coverImage = project.image.trim();
+          else if (project.image?.secure_url) coverImage = project.image.secure_url;
+          else if (typeof project.image_url === 'string') coverImage = project.image_url;
 
-          // 3. Extraction of additional gallery screenshots ('images')
           const rawExtraImages = safeParseArray(project.images);
-          
           let fullGallery = [];
-          if (coverImage) {
-            fullGallery.push(coverImage);
-          }
-
+          if (coverImage) fullGallery.push(coverImage);
           rawExtraImages.forEach((imgItem) => {
             const urlStr = typeof imgItem === 'string' ? imgItem : imgItem?.secure_url || imgItem?.url;
-            if (urlStr && typeof urlStr === 'string' && !fullGallery.includes(urlStr)) {
-              fullGallery.push(urlStr);
-            }
+            if (urlStr && typeof urlStr === 'string' && !fullGallery.includes(urlStr)) fullGallery.push(urlStr);
           });
 
           return {
@@ -196,17 +163,13 @@ function Projects() {
     return () => { isMounted = false; };
   }, []);
 
-  // Modal body scroll lock and keyboard ESC support
   useEffect(() => {
     if (!selectedProject) return;
-
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') closeProjectModal();
+      if (e.key === 'Escape') setSelectedProject(null);
     };
-
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.body.style.overflow = 'auto';
       window.removeEventListener('keydown', handleKeyDown);
@@ -214,19 +177,9 @@ function Projects() {
   }, [selectedProject]);
 
   const categories = ['All', 'Web', 'Mobile', 'AI', 'Cybersecurity', 'Networking'];
-
   const filteredProjects = activeFilter === 'All'
     ? projects
     : projects.filter((p) => p.category?.toLowerCase() === activeFilter.toLowerCase());
-
-  const openProjectModal = (project) => {
-    setSelectedProject(project);
-    setActiveImageIndex(0);
-  };
-
-  const closeProjectModal = () => {
-    setSelectedProject(null);
-  };
 
   const renderTechLabel = useCallback((tech) => {
     if (!tech) return '';
@@ -241,13 +194,13 @@ function Projects() {
         
         {/* Header */}
         <div className="projects-header">
-          <span className="section-badge">Portfolio</span>
+          <span className="projects-badge">Portfolio</span>
           <h2 className="section-title">Projects & Achievements</h2>
           <p className="section-subtitle">
-            A selection of software solutions crafted with precision and impact.
+            Engineered digital experiences, scalable systems, and technical innovations.
           </p>
           
-          {/* Category Filters */}
+          {/* Category Filters with Logos */}
           <div className="filter-wrapper" role="tablist">
             {categories.map((cat) => (
               <button
@@ -257,7 +210,8 @@ function Projects() {
                 onClick={() => setActiveFilter(cat)}
                 className={`filter-pill ${activeFilter === cat ? 'active' : ''}`}
               >
-                {cat}
+                <span className="cat-icon">{CATEGORY_ICONS[cat] || '📁'}</span>
+                <span>{cat}</span>
               </button>
             ))}
           </div>
@@ -266,71 +220,71 @@ function Projects() {
         {loading ? (
           <div className="projects-loading">
             <div className="spinner"></div>
-            <p>Loading projects...</p>
+            <p>Loading showcase...</p>
           </div>
         ) : filteredProjects.length === 0 ? (
           <div className="no-projects-box">
-            <p className="no-projects">No projects found in this category at the moment.</p>
+            <p className="no-projects">No projects listed in this category yet.</p>
           </div>
         ) : (
-          /* Bento Grid */
-          <div className="bento-grid">
+          /* Modern Feature Grid */
+          <div className="modern-projects-grid">
             {filteredProjects.map((project, index) => {
               const isFeatured = index === 0;
-              // Reads directly the Cloudinary string URL
               const mainImgSrc = project.coverImage;
+              const categoryIcon = CATEGORY_ICONS[project.category] || '📁';
 
               return (
                 <article 
                   key={project.id || project._id || index} 
-                  className={`bento-card ${isFeatured ? 'featured' : ''}`}
-                  onClick={() => openProjectModal(project)}
+                  className={`modern-card ${isFeatured ? 'featured' : ''}`}
+                  onClick={() => {
+                    setSelectedProject(project);
+                    setActiveImageIndex(0);
+                  }}
                 >
-                  <div className="bento-media">
+                  <div className="card-media">
                     {mainImgSrc ? (
-                      <img 
-                        src={mainImgSrc} 
-                        alt={project.title} 
-                        className="bento-img"
-                        loading="lazy"
-                      />
+                      <img src={mainImgSrc} alt={project.title} className="card-img" loading="lazy" />
                     ) : (
-                      <div className="bento-placeholder">
+                      <div className="card-placeholder">
                         <span>{project.title}</span>
                       </div>
                     )}
-                    <div className="bento-overlay">
-                      <span className="action-hint">Explore Case Study →</span>
+                    <div className="card-overlay">
+                      <span className="view-case-btn">Case Study ↗</span>
                     </div>
-                    <span className="category-tag">{project.category}</span>
+                    
+                    {/* Category Tag with Icon */}
+                    <span className="category-tag-pill">
+                      <span className="cat-mini-icon">{categoryIcon}</span>
+                      <span>{project.category}</span>
+                    </span>
                   </div>
 
-                  <div className="bento-content">
-                    <div className="bento-header-info">
-                      <h3 className="bento-title">{project.title}</h3>
-                      {project.subtitle && (
-                        <p className="bento-subtitle">{project.subtitle}</p>
-                      )}
+                  <div className="card-body">
+                    <div className="card-text">
+                      <h3 className="card-title">{project.title}</h3>
+                      {project.subtitle && <p className="card-subtitle">{project.subtitle}</p>}
+                      <p className="card-description">
+                        {project.description?.length > 100 
+                          ? `${project.description.substring(0, 100)}...` 
+                          : project.description}
+                      </p>
                     </div>
 
-                    <p className="bento-description">
-                      {project.description?.length > 110 
-                        ? `${project.description.substring(0, 110)}...` 
-                        : project.description}
-                    </p>
-
-                    <div className="tech-chips">
-                      {project.technologies?.slice(0, 4).map((tech, idx) => {
+                    {/* Icon-Only Tech Stack */}
+                    <div className="icon-tech-stack">
+                      {project.technologies?.slice(0, 6).map((tech, idx) => {
                         const label = renderTechLabel(tech);
                         return (
-                          <span key={idx} className="tech-chip" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                            <HybridIcon name={label} size="14px" />
-                            {label}
-                          </span>
+                          <div key={idx} className="tech-icon-only-wrapper" title={label}>
+                            <HybridIcon name={label} size="18px" />
+                          </div>
                         );
                       })}
-                      {project.technologies?.length > 4 && (
-                        <span className="tech-chip more">+{project.technologies.length - 4}</span>
+                      {project.technologies?.length > 6 && (
+                        <span className="tech-more-badge">+{project.technologies.length - 6}</span>
                       )}
                     </div>
                   </div>
@@ -340,88 +294,98 @@ function Projects() {
           </div>
         )}
       </div>
+{/* EXPANDED & HARMONIZED CASE STUDY MODAL */}
+{selectedProject && (
+  <div className="modal-backdrop" onClick={() => setSelectedProject(null)}>
+    <div className="modal-container-expanded" onClick={(e) => e.stopPropagation()}>
+      
+      {/* Pinned Close Button */}
+      <button className="modal-close-btn" onClick={() => setSelectedProject(null)} aria-label="Close">
+        ✕
+      </button>
 
-      {/* MODAL SECTION */}
-      {selectedProject && (
-        <div className="modal-backdrop" onClick={closeProjectModal}>
-          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-            
-            <button className="modal-close-btn" onClick={closeProjectModal} aria-label="Close">
-              ✕
-            </button>
+      <div className="modal-grid">
+        {/* Left Column: Image Showcase */}
+        <div className="modal-gallery-zone">
+          <div className="modal-hero-frame">
+            {selectedProject.gallery?.length > 0 ? (
+              <img 
+                src={selectedProject.gallery[activeImageIndex]} 
+                alt={`${selectedProject.title} preview`} 
+                className="modal-hero-img"
+              />
+            ) : (
+              <div className="card-placeholder">No Preview Available</div>
+            )}
+          </div>
 
-            <div className="modal-body">
-              <div className="modal-gallery">
-                <div className="main-image-frame">
-                  {selectedProject.gallery?.length > 0 ? (
-                    <img 
-                      src={selectedProject.gallery[activeImageIndex]} 
-                      alt={`${selectedProject.title} preview`} 
-                      className="main-gallery-img"
-                    />
-                  ) : (
-                    <div className="bento-placeholder">No visual available</div>
-                  )}
-                </div>
+          {selectedProject.gallery?.length > 1 && (
+            <div className="modal-thumbnails-strip">
+              {selectedProject.gallery.map((imgUrl, idx) => (
+                <button
+                  key={idx}
+                  className={`modal-thumb-item ${activeImageIndex === idx ? 'active' : ''}`}
+                  onClick={() => setActiveImageIndex(idx)}
+                >
+                  <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
-                {selectedProject.gallery?.length > 1 && (
-                  <div className="gallery-thumbnails">
-                    {selectedProject.gallery.map((imgUrl, idx) => (
-                      <button
-                        key={idx}
-                        className={`thumb-btn ${activeImageIndex === idx ? 'active' : ''}`}
-                        onClick={() => setActiveImageIndex(idx)}
-                      >
-                        <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} />
-                      </button>
-                    ))}
+        {/* Right Column: Information & Text Details */}
+        <div className="modal-info-zone">
+          <div className="modal-meta-header">
+            <span className="category-tag-pill">
+              <span>{CATEGORY_ICONS[selectedProject.category] || '📁'}</span>
+              <span>{selectedProject.category}</span>
+            </span>
+            <h2 className="modal-main-title">{selectedProject.title}</h2>
+            {selectedProject.subtitle && <p className="modal-sub-title">{selectedProject.subtitle}</p>}
+          </div>
+
+          <div className="modal-text-block">
+            <h4 className="modal-section-heading">Overview</h4>
+            <p className="modal-description-text">{selectedProject.description}</p>
+          </div>
+
+          {/* Tech Stack */}
+          <div className="modal-text-block">
+            <h4 className="modal-section-heading">Technologies Built With</h4>
+            <div className="modal-tech-grid">
+              {selectedProject.technologies?.map((tech, idx) => {
+                const label = renderTechLabel(tech);
+                return (
+                  <div key={idx} className="modal-tech-badge">
+                    <HybridIcon name={label} size="16px" />
+                    <span>{label}</span>
                   </div>
-                )}
-              </div>
-
-              <div className="modal-details">
-                <span className="category-tag">{selectedProject.category}</span>
-                <h2>{selectedProject.title}</h2>
-                {selectedProject.subtitle && <p className="modal-subtitle">{selectedProject.subtitle}</p>}
-
-                <div className="modal-description">
-                  <h4>About Project</h4>
-                  <p>{selectedProject.description}</p>
-                </div>
-
-                <div className="modal-tech-stack">
-                  <h4>Technologies Used</h4>
-                  <div className="tech-chips">
-                    {selectedProject.technologies?.map((tech, idx) => {
-                      const label = renderTechLabel(tech);
-                      return (
-                        <span key={idx} className="tech-chip" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                          <HybridIcon name={label} size="16px" />
-                          {label}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="modal-actions">
-                  {selectedProject.github_url && (
-                    <a href={selectedProject.github_url} target="_blank" rel="noopener noreferrer" className="btn btn-github">
-                      View Code
-                    </a>
-                  )}
-                  {selectedProject.live_url && (
-                    <a href={selectedProject.live_url} target="_blank" rel="noopener noreferrer" className="btn btn-live">
-                      Live Preview ↗
-                    </a>
-                  )}
-                </div>
-              </div>
-
+                );
+              })}
             </div>
           </div>
+
+          {/* Action Buttons */}
+          <div className="modal-actions-row">
+            {selectedProject.github_url && (
+              <a href={selectedProject.github_url} target="_blank" rel="noopener noreferrer" className="modal-btn modal-btn-secondary">
+                <span>Source Code</span> ↗
+              </a>
+            )}
+            {selectedProject.live_url && (
+              <a href={selectedProject.live_url} target="_blank" rel="noopener noreferrer" className="modal-btn modal-btn-primary">
+                <span>Live Demo</span> 🚀
+              </a>
+            )}
+          </div>
+
         </div>
-      )}
+      </div>
+
+    </div>
+  </div>
+)}
     </section>
   );
 }
