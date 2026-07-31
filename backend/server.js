@@ -18,13 +18,14 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
     origin: [
         "http://localhost:5173", 
-        "http://localhost:5174", // أضفنا هذا المنفذ النشط حالياً عندك
-        "http://localhost:3000"
+        "http://localhost:5174",
+        "http://localhost:3000",
+        "https://official-portfolio-8c94laidp-yaghmourassens-projects.vercel.app", // رابط فرونت إند Vercel الحالي
+        /\.vercel\.app$/ // يتيح أي رابط معاينة (Preview URL) من Vercel
     ], 
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
