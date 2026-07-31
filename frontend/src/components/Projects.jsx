@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getProjects } from '../services/projects';
-import '../styles/Projects.css';
+import '../styles/projects.css';
 
 // Tech Icons Mapping
 const STATIC_ICONS = {
