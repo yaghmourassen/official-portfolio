@@ -1,11 +1,11 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import SEO from './components/SEO';
-import Home from './pages/Home'; 
-import Login from './pages/login';
-import './App.css'; 
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import SEO from "./components/SEO";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import "./App.css";
 
-// التحميل الكسول لصفحة لوحة التحكم (Admin)
-const Admin = lazy(() => import('./pages/admin'));
+// Lazy Loading
+const Admin = lazy(() => import("./pages/Admin"));
 
 function App() {
   const [view, setView] = useState('portfolio'); 

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import AdminProjects from "../components/adminprojects.jsx";
-import AdminExperience from "../components/adminexperience.jsx";
-import AdminEducation from "../components/admineducation.jsx";
-import AdminSkills from "../components/adminskills.jsx";
+import React, { useState } from "react";
+import AdminProjects from "../components/AdminProjects";
+import AdminExperience from "../components/AdminExperience";
+import AdminEducation from "../components/AdminEducation";
+import AdminSkills from "../components/AdminSkills";
 
 const Admin = ({ onLogout }) => {
   // Tabs: 'projects', 'experience', 'education', ou 'skills'
