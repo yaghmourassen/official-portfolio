@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AdminProjects from "../components/AdminProjects";
-import AdminExperience from "../components/AdminExperience";
-import AdminEducation from "../components/AdminEducation";
+import AdminExperience from "../components/adminexperience";
+import AdminEducation from "../components/admineducation";
 import AdminSkills from "../components/AdminSkills";
 
 const Admin = ({ onLogout }) => {

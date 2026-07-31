@@ -1,12 +1,12 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../components/navbar";
 import Hero from "../components/Hero";
 import About from "../components/About";
-import Skills from "../components/Skills";
+import Skills from "../components/skills";
 import Projects from "../components/Projects";
-import Experience from "../components/Experience";
-import Education from "../components/Education";
-import Contact from "../components/Contact";
-import Footer from "../components/Footer";
+import Experience from "../components/experience";
+import Education from "../components/education";
+import Contact from "../components/contact";
+import Footer from "../components/footer";
 import FloatingSocials from "../components/FloatingSocials";
 
 // Styles
