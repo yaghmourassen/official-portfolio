@@ -2,3 +2,7 @@
 database.sqlite
 database.sqlite-journal
 node_modules/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+fix-db.js
