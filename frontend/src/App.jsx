@@ -1,10 +1,9 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import SEO from "./components/SEO";
 import Home from "./pages/Home";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import "./App.css";
 
-// Lazy Loading
 const Admin = lazy(() => import("./pages/Admin"));
 
 function App() {
