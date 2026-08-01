@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /*?access=
 
-Sitemap: https://yaghmourassen.dev/sitemap.xml
+# حماية رابط الإدارة من الأرشفة
+Disallow: /*?access=didou-admin
+
+Sitemap: https://official-portfolio-three-vert.vercel.app/sitemap.xml
