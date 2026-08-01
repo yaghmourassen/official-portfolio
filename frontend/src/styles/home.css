@@ -2,129 +2,194 @@
    HERO SECTION
 ========================== */
 
-.hero-section{
-
-    min-height:90vh;
-
-    background:linear-gradient(
+.hero-section {
+    min-height: 90vh;
+    background: linear-gradient(
         135deg,
         #0f172a,
         #1e293b
     );
-
-    display:flex;
-
-    align-items:center;
-
-    color:white;
-
-    padding:80px 0;
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 100px 0 80px 0; /* Extra top padding prevents overlap with fixed navbar */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* ==========================
-   TEXT
+   TEXT & TYPOGRAPHY
 ========================== */
 
-.hero-small-title{
-
-    color:#38bdf8;
-
-    font-size:18px;
-
-    margin-bottom:15px;
+.hero-small-title {
+    color: #38bdf8;
+    font-size: 18px;
+    margin-bottom: 15px;
 }
 
-.hero-title{
-
-    font-size:60px;
-
-    font-weight:700;
-
-    line-height:1.2;
-
-    margin-bottom:20px;
+/* Uses clamp(min, preferred, max) so text scales smoothly on mobile */
+.hero-title {
+    font-size: clamp(32px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    word-break: break-word; /* Prevents overflow from long strings */
 }
 
-.hero-title span{
-
-    color:#3b82f6;
+.hero-title span {
+    color: #3b82f6;
 }
 
-.hero-subtitle{
-
-    color:#cbd5e1;
-
-    font-size:28px;
-
-    margin-bottom:25px;
+.hero-subtitle {
+    color: #cbd5e1;
+    font-size: clamp(20px, 4vw, 28px);
+    margin-bottom: 25px;
 }
 
-.hero-description{
-
-    color:#94a3b8;
-
-    font-size:18px;
-
-    line-height:1.8;
-
-    margin-bottom:35px;
+.hero-description {
+    color: #94a3b8;
+    font-size: clamp(15px, 2.5vw, 18px);
+    line-height: 1.8;
+    margin-bottom: 35px;
 }
 
 /* ==========================
    BUTTONS
 ========================== */
 
-.hero-buttons{
-
-    display:flex;
-
-    gap:15px;
-
-    flex-wrap:wrap;
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-.hero-buttons .btn{
-
-    padding:14px 28px;
-
-    border-radius:10px;
-
-    font-weight:600;
+.hero-buttons .btn {
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
-.hero-buttons i{
-
-    margin-right:8px;
+.hero-buttons i {
+    margin-right: 8px;
 }
 
 /* ==========================
    IMAGE
 ========================== */
 
-.hero-image{
-
-    width:350px;
-
-    max-width:100%;
-
-    animation:float 4s ease-in-out infinite;
+.hero-image {
+    width: 350px;
+    max-width: 100%;
+    height: auto;
+    animation: float 4s ease-in-out infinite;
 }
 
-@keyframes float{
-
-    0%{
-
-        transform:translateY(0px);
+@keyframes float {
+    0% {
+        transform: translateY(0px);
     }
-
-    50%{
-
-        transform:translateY(-15px);
+    50% {
+        transform: translateY(-15px);
     }
+    100% {
+        transform: translateY(0px);
+    }
+}
+/* ==========================
+   HERO SECTION
+========================== */
 
-    100%{
+.hero-section {
+    min-height: 90vh;
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+    );
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 100px 0 80px 0; /* Extra top padding prevents overlap with fixed navbar */
+    width: 100%;
+    box-sizing: border-box;
+}
 
-        transform:translateY(0px);
+/* ==========================
+   TEXT & TYPOGRAPHY
+========================== */
+
+.hero-small-title {
+    color: #38bdf8;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* Uses clamp(min, preferred, max) so text scales smoothly on mobile */
+.hero-title {
+    font-size: clamp(32px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    word-break: break-word; /* Prevents overflow from long strings */
+}
+
+.hero-title span {
+    color: #3b82f6;
+}
+
+.hero-subtitle {
+    color: #cbd5e1;
+    font-size: clamp(20px, 4vw, 28px);
+    margin-bottom: 25px;
+}
+
+.hero-description {
+    color: #94a3b8;
+    font-size: clamp(15px, 2.5vw, 18px);
+    line-height: 1.8;
+    margin-bottom: 35px;
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.hero-buttons .btn {
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.hero-buttons i {
+    margin-right: 8px;
+}
+
+/* ==========================
+   IMAGE
+========================== */
+
+.hero-image {
+    width: 350px;
+    max-width: 100%;
+    height: auto;
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0px);
     }
 }
 
@@ -132,28 +197,37 @@
    RESPONSIVE
 ========================== */
 
-@media(max-width:992px){
-
-    .hero-section{
-
-        text-align:center;
+@media (max-width: 992px) {
+    .hero-section {
+        text-align: center;
+        padding-top: 110px;
     }
 
-    .hero-title{
-
-        font-size:45px;
+    .hero-buttons {
+        justify-content: center;
     }
 
-    .hero-buttons{
+    .hero-image {
+        margin: 40px auto 0 auto;
+        width: 260px;
+    }
+}
+/* ==========================
+   RESPONSIVE
+========================== */
 
-        justify-content:center;
+@media (max-width: 992px) {
+    .hero-section {
+        text-align: center;
+        padding-top: 110px;
     }
 
-    .hero-image{
-
-        margin-top:50px;
-
-        width:280px;
+    .hero-buttons {
+        justify-content: center;
     }
 
+    .hero-image {
+        margin: 40px auto 0 auto;
+        width: 260px;
+    }
 }
