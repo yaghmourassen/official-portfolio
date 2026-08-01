@@ -1,7 +1,21 @@
 /* ==========================
+   GLOBAL VIEWPORT SAFETY
+========================== */
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* Prevents right-side blank space */
+    margin: 0;
+    padding: 0;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+}
+
+/* ==========================
    HERO SECTION
 ========================== */
-
 .hero-section {
     min-height: 90vh;
     background: linear-gradient(
@@ -12,28 +26,29 @@
     display: flex;
     align-items: center;
     color: white;
-    padding: 100px 0 80px 0; /* Extra top padding prevents overlap with fixed navbar */
+    padding: 100px 15px 80px 15px; /* Added 15px side padding so content never touches the screen edge */
     width: 100%;
+    max-width: 100vw; /* Strict viewport limit */
     box-sizing: border-box;
+    overflow: hidden; /* Clips floating elements inside hero */
 }
 
 /* ==========================
    TEXT & TYPOGRAPHY
 ========================== */
-
 .hero-small-title {
     color: #38bdf8;
     font-size: 18px;
     margin-bottom: 15px;
 }
 
-/* Uses clamp(min, preferred, max) so text scales smoothly on mobile */
 .hero-title {
     font-size: clamp(32px, 6vw, 60px);
     font-weight: 700;
     line-height: 1.2;
     margin-bottom: 20px;
-    word-break: break-word; /* Prevents overflow from long strings */
+    word-break: break-word;
+    overflow-wrap: break-word; /* Extra safety for mobile text scaling */
 }
 
 .hero-title span {
@@ -56,11 +71,11 @@
 /* ==========================
    BUTTONS
 ========================== */
-
 .hero-buttons {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    max-width: 100%; /* Prevents buttons from overflowing container */
 }
 
 .hero-buttons .btn {
@@ -76,127 +91,25 @@
 /* ==========================
    IMAGE
 ========================== */
-
 .hero-image {
-    width: 350px;
-    max-width: 100%;
-    height: auto;
-    animation: float 4s ease-in-out infinite;
-}
-
-@keyframes float {
-    0% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
-}
-/* ==========================
-   HERO SECTION
-========================== */
-
-.hero-section {
-    min-height: 90vh;
-    background: linear-gradient(
-        135deg,
-        #0f172a,
-        #1e293b
-    );
-    display: flex;
-    align-items: center;
-    color: white;
-    padding: 100px 0 80px 0; /* Extra top padding prevents overlap with fixed navbar */
     width: 100%;
-    box-sizing: border-box;
-}
-
-/* ==========================
-   TEXT & TYPOGRAPHY
-========================== */
-
-.hero-small-title {
-    color: #38bdf8;
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-/* Uses clamp(min, preferred, max) so text scales smoothly on mobile */
-.hero-title {
-    font-size: clamp(32px, 6vw, 60px);
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    word-break: break-word; /* Prevents overflow from long strings */
-}
-
-.hero-title span {
-    color: #3b82f6;
-}
-
-.hero-subtitle {
-    color: #cbd5e1;
-    font-size: clamp(20px, 4vw, 28px);
-    margin-bottom: 25px;
-}
-
-.hero-description {
-    color: #94a3b8;
-    font-size: clamp(15px, 2.5vw, 18px);
-    line-height: 1.8;
-    margin-bottom: 35px;
-}
-
-/* ==========================
-   BUTTONS
-========================== */
-
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.hero-buttons .btn {
-    padding: 14px 28px;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-.hero-buttons i {
-    margin-right: 8px;
-}
-
-/* ==========================
-   IMAGE
-========================== */
-
-.hero-image {
-    width: 350px;
-    max-width: 100%;
+    max-width: 350px; /* Safer than fixed width: 350px on screens <350px */
     height: auto;
     animation: float 4s ease-in-out infinite;
 }
 
 @keyframes float {
-    0% {
+    0%, 100% {
         transform: translateY(0px);
     }
     50% {
         transform: translateY(-15px);
     }
-    100% {
-        transform: translateY(0px);
-    }
 }
 
 /* ==========================
    RESPONSIVE
 ========================== */
-
 @media (max-width: 992px) {
     .hero-section {
         text-align: center;
@@ -209,25 +122,6 @@
 
     .hero-image {
         margin: 40px auto 0 auto;
-        width: 260px;
-    }
-}
-/* ==========================
-   RESPONSIVE
-========================== */
-
-@media (max-width: 992px) {
-    .hero-section {
-        text-align: center;
-        padding-top: 110px;
-    }
-
-    .hero-buttons {
-        justify-content: center;
-    }
-
-    .hero-image {
-        margin: 40px auto 0 auto;
-        width: 260px;
+        max-width: 260px;
     }
 }
